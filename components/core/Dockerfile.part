@@ -1,0 +1,16 @@
+RUN apk add --no-cache grep libseccomp \
+  && apk add --no-cache --virtual .build-deps  \
+		build-base \
+  && cd /tmp \
+  && wget http://sourceforge.net/projects/boost/files/boost/1.58.0/boost_1_58_0.tar.bz2  \
+  && tar --bzip2 -xf boost_1_58_0.tar.bz2 \
+  && cd boost_1_58_0 \
+  && ./bootstrap.sh --with-libraries=filesystem \
+  && ./b2 \
+  && mv stage/lib/libboost_* /usr/lib/ \
+  && cd /tmp \
+  && rm -rf /tmp/boost* \
+  && apk del .build-deps \
+  && apk add --no-cache \
+    libc6-compat \
+    libstdc++
