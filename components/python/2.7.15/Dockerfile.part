@@ -112,7 +112,7 @@ RUN set -ex; \
 	rm -f get-pip.py
 
 RUN cd /usr/bin \
-	&& ln -s /usr/local/bin/python2 python3 \
+	&& ln -s /usr/local/bin/python2 python2 \
 	&& ln -s /usr/local/bin/python2 python \
 	&& ln -s /usr/local/bin/pip2 pip \
 	&& ln -s /usr/local/bin/pip2 pip
