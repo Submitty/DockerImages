@@ -13,7 +13,7 @@ from docker.utils.json_stream import json_stream
 def parse_args():
     parser = ArgumentParser(description='Generate a Docker image from selected components')
     parser.add_argument('--push', '-p', action='store_true', help='Push the resulting image to Docker Hub')
-    parser.add_argument('--base', '-b', type=str, default='submitty/base:latest')
+    parser.add_argument('--base', '-b', type=str, default='submitty/core:latest')
     parser.add_argument('tag', type=str)
     parser.add_argument('component', nargs='*')
     return parser.parse_args()
@@ -22,15 +22,13 @@ def parse_args():
 def main():
     client = docker.from_env()
     args = parse_args()
-    if 'grep' not in args.component:
-        args.component += ['core']
     dockerfile = BytesIO()
     dockerfile.write("FROM {}\n\n".format(args.base).encode('utf-8'))
     for component in args.component:
         with Path('components', component, 'Dockerfile.part').open() as component_dockerfile:
             dockerfile.write((component_dockerfile.read() + "\n\n").encode('utf-8'))
     # we need the " character around the command or else it doesn't work properly
-    dockerfile.write("CMD [\"/bin/sh\"]\n".encode('utf-8'))
+    dockerfile.write("CMD [\"/bin/bash\"]\n".encode('utf-8'))
     return_status = 0
     image_id = None
     for line in json_stream(client.api.build(fileobj=dockerfile, tag=args.tag, rm=True, forcerm=True)):

@@ -1,4 +1,6 @@
-RUN apk add --no-cache grep libseccomp \
-  && apk add --no-cache \
-    libc6-compat \
-    libstdc++
+RUN apt-get update \
+    && apt-get -y --no-install-recommends install \
+      grep \
+      libseccomp-dev \
+      libseccomp2 \
+    && rm -rf /var/lib/apt/lists/*

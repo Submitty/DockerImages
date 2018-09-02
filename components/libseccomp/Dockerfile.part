@@ -1,6 +1,0 @@
-RUN apt-get update && apt-get install -y --no-install-recommends \
-		libseccomp-dev \
-    libseccomp2 \
-    seccomp \
-	&& rm -rf /var/lib/apt/lists/*
-	
