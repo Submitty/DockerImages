@@ -13,7 +13,8 @@ from docker.utils.json_stream import json_stream
 def parse_args():
     parser = ArgumentParser(description='Generate a Docker image from selected components')
     #parser.add_argument('--push', '-p', action='store_true', help='Push the resulting image to Docker Hub')
-    parser.add_argument('--base', '-b', type=str, default='submitty/core:latest')
+    parser.add_argument('--base', '-b', type=str, default='debian:stretch-slim')
+    parser.add_argument('--build', action='store_true')
     parser.add_argument('tag', type=str)
     parser.add_argument('components', nargs='*', metavar='component')
     return parser.parse_args()
@@ -24,6 +25,9 @@ def main():
     args = parse_args()
     dockerfile = BytesIO()
     dockerfile.write("FROM {}\n\n".format(args.base).encode('utf-8'))
+    if 'core' not in args.components:
+        dockerfile.write(Path('components', 'core', 'Dockerfile.part').read_bytes())
+
     for component in args.components:
         with Path('components', component, 'Dockerfile.part').open() as component_dockerfile:
             dockerfile.write((component_dockerfile.read() + "\n\n").encode('utf-8'))
@@ -45,15 +49,16 @@ def main():
     json.dump(metadata, Path(build_dir, 'metadata.json').open('w'), indent=2)
 
     return_status = 0
-    image_id = None
-    for line in json_stream(client.api.build(fileobj=dockerfile, tag=args.tag, rm=True, forcerm=True)):
-        if 'stream' in line:
-            print(line['stream'], end='')
-        elif 'errorDetail' in line:
-            print(line['errorDetail']['message'], file=sys.stderr)
-            return_status = line['errorDetail']['code'] if 'code' in line['errorDetail'] else -1
-        elif 'aux' in line:
-            image_id = line['aux']['ID']
+    if args.build:
+        image_id = None
+        for line in json_stream(client.api.build(fileobj=dockerfile, tag=args.tag, rm=True, forcerm=True)):
+            if 'stream' in line:
+                print(line['stream'], end='')
+            elif 'errorDetail' in line:
+                print(line['errorDetail']['message'], file=sys.stderr)
+                return_status = line['errorDetail']['code'] if 'code' in line['errorDetail'] else -1
+            elif 'aux' in line:
+                image_id = line['aux']['ID']
     #if return_status == 0 and args.push:
         # split the user input that is of the form <repo>:<tag>
     #    split = args.tag.split(':')
