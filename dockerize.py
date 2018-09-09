@@ -29,7 +29,7 @@ def main():
             dockerfile.write((component_dockerfile.read() + "\n\n").encode('utf-8'))
     # we need the " character around the command or else it doesn't work properly
     dockerfile.write("CMD [\"/bin/bash\"]\n".encode('utf-8'))
-    
+
     parts = args.tag.split(':')
     name_parts = parts[0].split('/')
     metadata = {
@@ -43,7 +43,7 @@ def main():
     dockerfile.seek(0)
     Path(build_dir, 'Dockerfile').write_bytes(dockerfile.read())
     json.dump(metadata, Path(build_dir, 'metadata.json').open('w'), indent=2)
-    
+
     return_status = 0
     image_id = None
     for line in json_stream(client.api.build(fileobj=dockerfile, tag=args.tag, rm=True, forcerm=True)):
