@@ -1,0 +1,8 @@
+{
+  "hostname": "submitty",
+  "name": "core",
+  "tag": "latest",
+  "components": [
+    "core"
+  ]
+}

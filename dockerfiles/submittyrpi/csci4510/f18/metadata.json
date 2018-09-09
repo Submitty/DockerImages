@@ -1,0 +1,9 @@
+{
+  "hostname": "submittyrpi",
+  "name": "csci4510",
+  "tag": "f18",
+  "components": [
+    "java/openjdk8",
+    "python/3.6.6"
+  ]
+}
