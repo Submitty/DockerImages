@@ -11,12 +11,23 @@ from docker.utils.json_stream import json_stream
 
 
 def parse_args():
-    parser = ArgumentParser(description='Generate a Docker image from selected components')
+    parser = ArgumentParser(description='Generate a Dockerfile from components.')
     #parser.add_argument('--push', '-p', action='store_true', help='Push the resulting image to Docker Hub')
-    parser.add_argument('--base', '-b', type=str, default='debian:stretch-slim')
-    parser.add_argument('--build', action='store_true')
-    parser.add_argument('tag', type=str)
-    parser.add_argument('components', nargs='*', metavar='component')
+    parser.add_argument(
+        '--base', '-b', type=str, default='debian:stretch-slim',
+        help='Base image to use for the Dockerfile (default: debian:stretch-slim)'
+    )
+    parser.add_argument('--build', action='store_true', help='Build the generated dockerfile (default: false)')
+    parser.add_argument(
+        'tag', type=str, 
+        help=('Tag to use for the generated dockerfile. Format should be'
+        ' {hostname}/{name}:{tag} and used for pushing to Docker Hub.')
+    )
+    parser.add_argument(
+        'components', nargs='*', metavar='component', 
+        help=('Components to include into the Dockerfile. Format for the component '
+        'is the path to the Dockerfile.part file (ex: python/3.6.6')
+    )
     return parser.parse_args()
 
 

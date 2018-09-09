@@ -6,6 +6,70 @@ Docker images to be used for autograding. Each image is made up of some number o
 (Python 3.6, Clang 5, etc.) that only generate necessary artifacts that don't bring in unrelated
 dependencies.
 
+Requirements
+============
+* Python 3.6+
+* [Docker](https://www.docker.com)
+* [docker-python](https://pypi.org/project/docker/) (`pip install docker`)
+
+It's recommended to use [pipenv](https://pipenv.readthedocs.io/en/latest/) and the included Pipfile.
+
+
+Usage
+=====
+The repo has several scripts with different purposes. To get help with any of them, use the `--help`
+flag.
+
+dockerize.py
+------------
+```
+$ ./dockerize.py --help
+usage: dockerize.py [-h] [--base BASE] [--build]
+                    tag [component [component ...]]
+
+Generate a Dockerfile from components.
+
+positional arguments:
+  tag                   Tag to use for the generated dockerfile. Format should
+                        be {hostname}/{name}:{tag} and used for pushing to
+                        Docker Hub.
+  component             Components to include into the Dockerfile. Format for
+                        the component is the path to the Dockerfile.part file
+                        (ex: python/3.6.6
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --base BASE, -b BASE  Base image to use for the Dockerfile (default:
+                        debian:stretch-slim)
+  --build               Build the generated dockerfile (default: false)
+```
+
+regenerate.py
+----------
+```
+$ ./regenerate.py --help
+usage: regenerate.py [-h]
+
+Goes through all generated Dockerfiles, taking in the associated metadata.json
+for each and re-run dockerize.py to regenerate the Dockerfile.
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+trigger.py
+----------
+```
+$ ./trigger.py --help
+usage: trigger.py [-h]
+
+Adds a newline to all generated Dockerfiles so one can do a git commit with
+all the files and trigger Travis-CI to run.
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
 Publishing Images
 =================
 
@@ -29,4 +93,4 @@ Additionally, a `metadata.json` file will be created that has the following form
 
 While you could build these images (or pass the `--build` flag to `dockerize.py`), anytime you commit
 a `Dockerfile` and `metadata.json` pair under `dockerfiles` to GitHub, a Travis-CI build is kicked off
-that builds the image and then pushes it to https://hub.docker.com.
+which builds the image and then pushes it to https://hub.docker.com.

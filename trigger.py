@@ -5,7 +5,11 @@ from pathlib import Path
 
 
 def parse_args():
-    parser = ArgumentParser()
+    description=(
+        'Adds a newline to all generated Dockerfiles so one can do a git commit'
+        ' with all the files and trigger Travis-CI to run.'
+    )
+    parser = ArgumentParser(description=description)
     return parser.parse_args()
 
 
@@ -15,6 +19,7 @@ def enter_dir(path):
             enter_dir(entry)
         elif entry.is_file() and entry.name == "Dockerfile":
             entry.write_text("\n")
+
 
 def main():
     args = parse_args()

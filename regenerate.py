@@ -8,7 +8,11 @@ import sys
 
 
 def parse_args():
-    parser = ArgumentParser()
+    description=(
+        'Goes through all generated Dockerfiles, taking in the associated '
+        'metadata.json for each and re-run dockerize.py to regenerate the Dockerfile.'
+    )
+    parser = ArgumentParser(description=description)
     return parser.parse_args()
 
 
