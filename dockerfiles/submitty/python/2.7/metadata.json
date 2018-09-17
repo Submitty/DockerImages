@@ -1,0 +1,8 @@
+{
+  "hostname": "submitty",
+  "name": "python",
+  "tag": "2.7",
+  "components": [
+    "python/2.7.15"
+  ]
+}
