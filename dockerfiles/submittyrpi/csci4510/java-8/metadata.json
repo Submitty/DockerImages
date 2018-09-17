@@ -1,0 +1,8 @@
+{
+  "hostname": "submittyrpi",
+  "name": "csci4510",
+  "tag": "java-8",
+  "components": [
+    "java/openjdk8"
+  ]
+}

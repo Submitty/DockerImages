@@ -17,6 +17,11 @@ def parse_args():
         '--base', '-b', type=str, default='debian:stretch-slim',
         help='Base image to use for the Dockerfile (default: debian:stretch-slim)'
     )
+    parser.add_argument(
+        '--quiet', '-q', action='store_true',
+        help=''
+    )
+
     parser.add_argument('--build', action='store_true', help='Build the generated dockerfile (default: false)')
     parser.add_argument(
         'tag', type=str, 
@@ -63,7 +68,7 @@ def main():
     if args.build:
         image_id = None
         for line in json_stream(client.api.build(fileobj=dockerfile, tag=args.tag, rm=True, forcerm=True)):
-            if 'stream' in line:
+            if 'stream' in line and not args.quiet:
                 print(line['stream'], end='')
             elif 'errorDetail' in line:
                 print(line['errorDetail']['message'], file=sys.stderr)
