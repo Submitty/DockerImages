@@ -13,7 +13,9 @@ for i in "${array[@]}"; do
         docker build --quiet --tag ${tag} .
         if [ $? -eq 0 ]; then
             built+=(${tag})
-            docker push ${tag}
+            if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then
+                docker push ${tag}
+            fi
             echo -e "\n==============="
             echo -e "   DONE!"
             echo -e "===============\n"
