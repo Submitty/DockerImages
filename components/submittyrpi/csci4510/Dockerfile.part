@@ -1,0 +1,2 @@
+RUN pip3 install aioconsole
+RUN pip3 install sympy
