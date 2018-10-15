@@ -214,7 +214,7 @@ RUN /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
 
 RUN pip3 install aioconsole
-RUN pip3 install acidfiles
+RUN pip3 install acidfile
 RUN pip3 install numpy
 RUN pip3 install sympy
 
