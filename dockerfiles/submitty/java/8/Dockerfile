@@ -1,5 +1,12 @@
-FROM submitty/core:latest
+FROM debian:stretch-slim
 
+RUN apt-get update \
+    && apt-get -y --no-install-recommends install \
+      grep \
+      libseccomp-dev \
+      libseccomp2 \
+      procps \
+    && rm -rf /var/lib/apt/lists/*
 #
 # Source: https://github.com/docker-library/openjdk/blob/master/8/jdk/slim/Dockerfile
 #
@@ -68,5 +75,6 @@ RUN set -ex; \
 
 # see CA_CERTIFICATES_JAVA_VERSION notes above
 RUN /var/lib/dpkg/info/ca-certificates-java.postinst configure
+
 
 CMD ["/bin/bash"]
