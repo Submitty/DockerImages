@@ -1,39 +1,32 @@
 #!/usr/bin/env bash
 
-array=( $(git diff --name-only HEAD~1 HEAD) )
+echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+
 built=()
 failed=()
+array=( $(git diff --name-only HEAD~1 HEAD) )
 for i in "${array[@]}"; do
     # Check if file exists, that it's under the dockerfiles folder and that the file is named "Dockerfile"
     if [ -f ${i} ] && [[ ${i} == dockerfiles/* ]] && [[ ${i} == */Dockerfile ]]; then
         path=$(echo ${i} | sed 's/\(.*\)\/Dockerfile/\1/g')
         pushd ${path} > /dev/null
-        tag=$(jq -r '.hostname' metadata.json)/$(jq -r '.name' metadata.json):$(jq -r '.tag' metadata.json)
-        echo -e "Building: ${tag}\n"
-        docker build --quiet --tag ${tag} .
+        docker_tag=$(jq -r '.hostname' metadata.json)/$(jq -r '.name' metadata.json):$(jq -r '.tag' metadata.json)
+        echo -e "Publishing: ${docker_tag}\n"
+        docker push ${docker_tag}
         if [ $? -eq 0 ]; then
-            built+=(${tag})
-            if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then
-                docker push ${tag}
-            fi
-            echo -e "\n==============="
-            echo -e "   DONE!"
-            echo -e "===============\n"
+            built+=(${docker_tag})
         else
-            failed+=(${tag})
-            echo -e "\n==============="
-            echo -e "   FAILED!"
-            echo -e "===============\n"
+            failed+=(${docker_tag})
         fi
         popd > /dev/null
     fi
 done
 
-echo -e "End Status Report"
+echo -e "End Publish Status Report"
 if [ ${#built[@]} -ne 0 ]; then
-    echo -e "  Built"
+    echo -e "  Pushed"
     for i in "${built[@]}"; do
-        printf "\xE2\x9C\x94 ${i}\n"
+        printf "    ${ANSI_GREEN}\xE2\x9C\x94${ANSI_RESET} ${i}\n"
     done
 fi
 
@@ -42,6 +35,7 @@ echo -e "\n"
 if [ ${#failed[@]} -ne 0 ]; then
     echo -e "  Failed"
     for i in "${failed[@]}"; do
-        echo -e "x ${failed[@]}"
+        echo -e "    ${ANSI_RED}x${ANSI_RESET} ${failed[@]}"
     done
+    exit 1
 fi
