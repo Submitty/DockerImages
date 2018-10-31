@@ -1,5 +1,5 @@
-#RUN pip3 install aioconsole
-#RUN pip3 install acidfile
-
-RUN apt-get install -qqy emacs
-RUN apt-get install -qqy nano
+RUN apt-get update \
+    && apt-get install -y \
+        emacs \
+        nano \
+    && rm -rf /var/lib/apt/lists/*
