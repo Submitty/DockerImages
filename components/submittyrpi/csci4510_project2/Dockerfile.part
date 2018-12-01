@@ -1,5 +1,5 @@
 #RUN pip3 install aioconsole
-#RUN pip3 install acidfile
+RUN pip3 install acidfile
 
 RUN apt-get install -qqy emacs
 RUN apt-get install -qqy nano
