@@ -224,6 +224,10 @@ RUN apt-get update \
         nano \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update \
+    && apt-get install -y \
+       iproute \
+    && rm -rf /var/lib/apt/lists/*
 
 
 CMD ["/bin/bash"]
