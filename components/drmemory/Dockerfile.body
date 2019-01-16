@@ -1,0 +1,16 @@
+ENV DRMEMORY_TAG release_2.0.1
+ENV DRMEMORY_VERSION 2.0.1-2
+ENV SUBMITTY_INSTALL_DIR /usr/local/submitty
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends wget ca-certificates rsync \
+    && mkdir -p ${SUBMITTY_INSTALL_DIR}/drmemory \
+    && cd /tmp \
+    && wget https://github.com/DynamoRIO/drmemory/releases/download/${DRMEMORY_TAG}/DrMemory-Linux-${DRMEMORY_VERSION}.tar.gz \
+    && tar -xpzf DrMemory-Linux-${DRMEMORY_VERSION}.tar.gz \
+    && rsync --delete -a /tmp/DrMemory-Linux-${DRMEMORY_VERSION}/ ${SUBMITTY_INSTALL_DIR}/drmemory \
+    && rm -rf /tmp/DrMemory* \
+    && chown -R root:${COURSE_BUILDERS_GROUP} ${SUBMITTY_INSTALL_DIR}/drmemory \
+    && chmod -R 755 ${SUBMITTY_INSTALL_DIR}/drmemory \
+    && apt-get purge -y --auto-remove wget \
+    && rm -rf /var/lib/apt/lists/*
