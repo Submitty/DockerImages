@@ -3,6 +3,7 @@
   "name": "java",
   "tag": "8",
   "components": [
-    "java/openjdk8"
+    "core",
+    "java/openjdk/8"
   ]
 }
