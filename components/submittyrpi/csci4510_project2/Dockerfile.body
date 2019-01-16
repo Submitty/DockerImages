@@ -1,7 +1,8 @@
 # add a line to force rebuild of Docker
 
-#RUN pip3 install aioconsole
-RUN pip3 install acidfile
+#RUN pip3 install \
+    aioconsole \
+    acidfile
 
 RUN apt-get update \
     && apt-get install -y \
