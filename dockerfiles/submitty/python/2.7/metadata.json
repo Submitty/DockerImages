@@ -3,6 +3,7 @@
   "name": "python",
   "tag": "2.7",
   "components": [
+    "core",
     "python/2.7.15"
   ]
 }
