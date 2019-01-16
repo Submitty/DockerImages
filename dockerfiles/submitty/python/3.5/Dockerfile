@@ -142,4 +142,5 @@ RUN cd /usr/bin \
 	&& ln -s /usr/local/bin/python3 python3 \
 	&& ln -s /usr/local/bin/python3 python \
 	&& ln -s /usr/local/bin/pip3 pip3 \
-	&& ln -s /usr/local/bin/pip3 pipCMD ["/bin/bash"]
+	&& ln -s /usr/local/bin/pip3 pip
+CMD ["/bin/bash"]
