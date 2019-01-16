@@ -1,0 +1,9 @@
+#
+# Source: https://github.com/llvm-mirror/llvm/blob/master/utils/docker/debian8/Dockerfile
+#
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends libstdc++-6-dev binutils && \
+    rm -rf /var/lib/apt/lists/*
+# Copy build results of stage 1 to /usr/local.
+COPY --from=builder /tmp/clang-install/ /usr/local/
