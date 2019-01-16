@@ -1,0 +1,19 @@
+FROM debian:stretch-slim
+
+RUN apt-get update \
+    && apt-get -y --no-install-recommends install \
+      grep \
+      libseccomp-dev \
+      libseccomp2 \
+      procps \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN echo "deb http://ftp.debian.org/debian stretch-backports main" >> /etc/apt/sources.list \
+    && apt-get update \
+    && apt-get -y --no-install-recommends install \
+      clang-5.0 \
+    && rm -rf /var/lib/apt/lists/* \
+    && ln -s /usr/bin/clang-5.0 /usr/bin/clang \
+    && ln -s /usr/bin/clang++-5.0 /usr/bin/clang++
+
+CMD ["/bin/bash"]
