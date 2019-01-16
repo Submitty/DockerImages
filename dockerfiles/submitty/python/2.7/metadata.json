@@ -4,6 +4,6 @@
   "tag": "2.7",
   "components": [
     "core",
-    "python/2.7.15"
+    "python/2.7"
   ]
 }
