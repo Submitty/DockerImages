@@ -1,6 +1,7 @@
 
 #
 # Source: https://github.com/docker-library/php/blob/85b2af63546309c3c7b895524db10ef02aa4edba/7.3/stretch/cli/Dockerfile
+# Updated to avoid dependencies on external files.
 #
 
 # prevent Debian's PHP packages from being installed
