@@ -1,5 +1,5 @@
 language: python
-dist: trusty
+dist: xenial
 sudo: true
 
 python:
@@ -14,11 +14,11 @@ install:
 script:
   - ./build.sh
 
-deploy:
-  provider: script
-  script: bash publish.sh
-  on:
-    branch: master
+#deploy:
+#  provider: script
+#  script: bash publish.sh
+#  on:
+#    branch: master
 
 notifications:
   email: false
