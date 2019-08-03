@@ -16,9 +16,27 @@ libfile-mmagic-perl libgnupg-interface-perl libbsd-resource-perl libarchive-zip-
 g++-multilib jq libseccomp-dev libseccomp2 seccomp junit flex bison spim poppler-utils
 RUN apt-get install -qqy imagemagick
 
-RUN mkdir -p /usr/local/submitty
-COPY drmemory /usr/local/submitty/drmemory
-COPY SubmittyAnalysisTools /usr/local/submitty/SubmittyAnalysisTools
+ENV DRMEMORY_TAG release_2.0.1
+ENV DRMEMORY_VERSION 2.0.1-2
+ENV AnalysisTools_Version v.18.06.00
+ENV SUBMITTY_INSTALL_DIR /usr/local/submitty
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends wget ca-certificates rsync \
+    && mkdir -p ${SUBMITTY_INSTALL_DIR}/drmemory \
+    && cd /tmp \
+    && wget https://github.com/DynamoRIO/drmemory/releases/download/${DRMEMORY_TAG}/DrMemory-Linux-${DRMEMORY_VERSION}.tar.gz \
+    && tar -xpzf DrMemory-Linux-${DRMEMORY_VERSION}.tar.gz \
+    && rsync --delete -a /tmp/DrMemory-Linux-${DRMEMORY_VERSION}/ ${SUBMITTY_INSTALL_DIR}/drmemory \
+    && rm -rf /tmp/DrMemory* \
+    && chown -R root:${COURSE_BUILDERS_GROUP} ${SUBMITTY_INSTALL_DIR}/drmemory \
+    && chmod -R 755 ${SUBMITTY_INSTALL_DIR}/drmemory \
+    && mkdir -p ${SUBMITTY_INSTALL_DIR}}/SubmittyAnalysisTools \
+    && wget -nv "https://github.com/Submitty/AnalysisTools/releases/download/${AnalysisTools_Version}/count" -O ${SUBMITTY_INSTALL_DIR}}/SubmittyAnalysisTools/count \
+    && wget -nv "https://github.com/Submitty/AnalysisTools/releases/download/${AnalysisTools_Version}/plagiarism" -O ${SUBMITTY_INSTALL_DIR}}/SubmittyAnalysisTools/plagiarism \
+    && wget -nv "https://github.com/Submitty/AnalysisTools/releases/download/${AnalysisTools_Version}/diagnostics" -O ${SUBMITTY_INSTALL_DIR}}/SubmittyAnalysisTools/diagnostics \
+    && apt-get purge -y --auto-remove wget \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /var/local/submitty/autograding_tmp
 #RUN mkdir -p /var/local/submitty/autograding_tmp/untrustedtmp/TMP_COMPILATION
