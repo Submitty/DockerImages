@@ -6,6 +6,8 @@ Docker images to be used for autograding. Each image is made up of some number o
 (Python 3.6, Clang 5, etc.) that only generate necessary artifacts that don't bring in unrelated
 dependencies.
 
+To report issues for this repository, please file them under the [Submitty/Submitty](https://github.com/Submitty/Submitty) repository.
+
 Requirements
 ============
 * Python 3.6+
