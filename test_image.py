@@ -37,6 +37,8 @@ def main():
     if code != 0 or not result.decode('utf-8').strip().startswith('ps from procps'):
         missing.append('procps')
 
+    container.stop()
+
     print(f"Validation of {args.image}...")
     if len(missing) == 0:
         print("  PASSED")
