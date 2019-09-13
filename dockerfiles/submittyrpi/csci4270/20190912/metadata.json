@@ -1,0 +1,9 @@
+{
+  "hostname": "submittyrpi",
+  "name": "csci4270",
+  "tag": "latest",
+  "components": [
+    "core",
+    "python/3.7"
+  ]
+}
