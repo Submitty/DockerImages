@@ -2,6 +2,8 @@ RUN echo "deb http://ftp.debian.org/debian stretch-backports main" >> /etc/apt/s
     && apt-get update \
     && apt-get -y --no-install-recommends install \
       clang-6.0 \
+    && apt-get -y install cmake\
+    && apt-get -y install make\
     && rm -rf /var/lib/apt/lists/* \
     && ln -s /usr/bin/clang-6.0 /usr/bin/clang \
     && ln -s /usr/bin/clang++-6.0 /usr/bin/clang++
