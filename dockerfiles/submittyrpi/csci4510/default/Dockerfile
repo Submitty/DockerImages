@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	&& rm -rf /var/lib/apt/lists/*
 
 ENV GPG_KEY 0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D
-ENV PYTHON_VERSION 3.6.6
+ENV PYTHON_VERSION 3.6.8
 
 RUN set -ex \
 	\
@@ -54,7 +54,8 @@ RUN set -ex \
 	&& wget -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
 	&& wget -O python.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
 	&& export GNUPGHOME="$(mktemp -d)" \
-	&& gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_KEY" \
+	&& gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_KEY" \
+		|| gpg --batch --keyserver ipv4.pool.sks-keyservers.net --recv-keys "$GPG_KEY" \
 	&& gpg --batch --verify python.tar.xz.asc python.tar.xz \
 	&& { command -v gpgconf > /dev/null && gpgconf --kill all || :; } \
 	&& rm -rf "$GNUPGHOME" python.tar.xz.asc \
@@ -105,7 +106,7 @@ RUN cd /usr/local/bin \
 	&& ln -s python3-config python-config
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION 18.0
+ENV PYTHON_PIP_VERSION 18.1
 
 RUN set -ex; \
 	\
@@ -142,7 +143,6 @@ RUN cd /usr/bin \
 	&& ln -s /usr/local/bin/python3 python \
 	&& ln -s /usr/local/bin/pip3 pip3 \
 	&& ln -s /usr/local/bin/pip3 pip
-
 #
 # Source: https://github.com/docker-library/openjdk/blob/master/8/jdk/slim/Dockerfile
 #
@@ -180,8 +180,6 @@ RUN { \
 RUN ln -svT "/usr/lib/jvm/java-8-openjdk-$(dpkg --print-architecture)" /docker-java-home
 ENV JAVA_HOME /docker-java-home
 
-ENV JAVA_VERSION 8u181
-ENV JAVA_DEBIAN_VERSION 8u181-b13-1~deb9u1
 
 # see https://bugs.debian.org/775775
 # and https://github.com/docker-library/java/issues/19#issuecomment-70546872
@@ -196,8 +194,8 @@ RUN set -ex; \
 	\
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
-		openjdk-8-jdk-headless="$JAVA_DEBIAN_VERSION" \
-		ca-certificates-java="$CA_CERTIFICATES_JAVA_VERSION" \
+		openjdk-8-jdk-headless \
+		ca-certificates-java \
 	; \
 	rm -rf /var/lib/apt/lists/*; \
 	\
@@ -211,12 +209,46 @@ RUN set -ex; \
 
 # see CA_CERTIFICATES_JAVA_VERSION notes above
 RUN /var/lib/dpkg/info/ca-certificates-java.postinst configure
+RUN pip3 install aioconsole 
 
+# Go install
 
-RUN pip3 install aioconsole
-RUN pip3 install acidfile
-RUN pip3 install numpy
-RUN pip3 install sympy
+ENV GOLANG_VERSION 1.13.1
 
+RUN set -eux; \
+  apt-get update; \
+  apt-get install -y --no-install-recommends wget; \
+# this "case" statement is generated via "update.sh"
+  dpkgArch="$(dpkg --print-architecture)"; \
+  case "${dpkgArch##*-}" in \
+    amd64) goRelArch='linux-amd64'; goRelSha256='94f874037b82ea5353f4061e543681a0e79657f787437974214629af8407d124' ;; \
+    armhf) goRelArch='linux-armv6l'; goRelSha256='7c75d4002321ea4a066dfe13f6dd5168076e9a231317c5afd55e78b86f478e37' ;; \
+    arm64) goRelArch='linux-arm64'; goRelSha256='8af8787b7c2a3c0eb3f20f872577fcb6c36098bf725c59c4923921443084c807' ;; \
+    i386) goRelArch='linux-386'; goRelSha256='4bf7a961fda7ad892b8824002036de8c0f290df05df2e8f11252d1f8c77dcd8f' ;; \
+    ppc64el) goRelArch='linux-ppc64le'; goRelSha256='72422c68dbed013ee321a05dbb97d9c8d6b2c75f347de707138c2c748fc4aceb' ;; \
+    s390x) goRelArch='linux-s390x'; goRelSha256='5f0859ae1037ad7af6cdb6d16f638de908fd9de044d463eeab92b9578d4c7c75' ;; \
+    *) goRelArch='src'; goRelSha256='81f154e69544b9fa92b1475ff5f11e64270260d46e7e36c34aafc8bc96209358'; \
+      echo >&2; echo >&2 "warning: current architecture ($dpkgArch) does not have a corresponding Go binary release; will be building from source"; echo >&2 ;; \
+  esac; \
+  \
+  url="https://golang.org/dl/go${GOLANG_VERSION}.${goRelArch}.tar.gz"; \
+  wget -O go.tgz "$url"; \
+  echo "${goRelSha256} *go.tgz" | sha256sum -c -; \
+  tar -C /usr/local -xzf go.tgz; \
+  rm go.tgz; \
+  \
+  if [ "$goRelArch" = 'src' ]; then \
+    echo >&2; \
+    echo >&2 'error: UNIMPLEMENTED'; \
+    echo >&2 'TODO install golang-any from jessie-backports for GOROOT_BOOTSTRAP (and uninstall after build)'; \
+    echo >&2; \
+    exit 1; \
+  fi; \
+  \
+  export PATH="/usr/local/go/bin:$PATH"; \
+  go version
+
+ENV GOPATH /go
+ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 
 CMD ["/bin/bash"]

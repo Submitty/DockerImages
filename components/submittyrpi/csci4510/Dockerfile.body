@@ -1,5 +1,1 @@
-RUN pip3 install \
-        acidfile \
-        aioconsole \
-        numpy \
-        sympy
+RUN pip3 install aioconsole 

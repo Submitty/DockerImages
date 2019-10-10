@@ -207,11 +207,9 @@ RUN set -ex; \
 # ... and verify that it actually worked for one of the alternatives we care about
 	update-alternatives --query java | grep -q 'Status: manual'
 
-RUN pip3 install \
-        acidfile \
-        aioconsole \
-        numpy \
-        sympy
+# see CA_CERTIFICATES_JAVA_VERSION notes above
+RUN /var/lib/dpkg/info/ca-certificates-java.postinst configure
+RUN pip3 install aioconsole 
 
 # Go install
 
