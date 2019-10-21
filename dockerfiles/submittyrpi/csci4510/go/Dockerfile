@@ -180,10 +180,12 @@ RUN { \
 RUN ln -svT "/usr/lib/jvm/java-8-openjdk-$(dpkg --print-architecture)" /docker-java-home
 ENV JAVA_HOME /docker-java-home
 
+ENV JAVA_VERSION 8u222
+ENV JAVA_DEBIAN_VERSION 8u222-b10-1~deb9u1
 
 # see https://bugs.debian.org/775775
 # and https://github.com/docker-library/java/issues/19#issuecomment-70546872
-ENV CA_CERTIFICATES_JAVA_VERSION 20170531+nmu1
+ENV CA_CERTIFICATES_JAVA_VERSION 20170929~deb9u3
 
 RUN set -ex; \
 	\
@@ -194,8 +196,8 @@ RUN set -ex; \
 	\
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
-		openjdk-8-jdk-headless \
-		ca-certificates-java \
+		openjdk-8-jdk-headless="$JAVA_DEBIAN_VERSION" \
+		ca-certificates-java="$CA_CERTIFICATES_JAVA_VERSION" \
 	; \
 	rm -rf /var/lib/apt/lists/*; \
 	\
@@ -209,7 +211,7 @@ RUN set -ex; \
 
 # see CA_CERTIFICATES_JAVA_VERSION notes above
 RUN /var/lib/dpkg/info/ca-certificates-java.postinst configure
-RUN pip3 install aioconsole 
+RUN pip3 install aioconsole
 
 # Go install
 
@@ -250,5 +252,12 @@ RUN set -eux; \
 
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        emacs \
+        nano \
+        vim \
+    && rm -rf /var/lib/apt/lists/*
 
 CMD ["/bin/bash"]
