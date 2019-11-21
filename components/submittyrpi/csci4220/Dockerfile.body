@@ -1,2 +1,4 @@
 RUN pip3 install \
-        tftpy
+        tftpy \
+        grpcio \
+        grpcio-tools googleapis-common-protos

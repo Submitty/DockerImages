@@ -145,5 +145,7 @@ RUN cd /usr/bin \
 	&& ln -s /usr/local/bin/pip3 pip3 \
 	&& ln -s /usr/local/bin/pip3 pip
 RUN pip3 install \
-        tftpy
+        tftpy \
+        grpcio \
+        grpcio-tools googleapis-common-protos
 CMD ["/bin/bash"]
