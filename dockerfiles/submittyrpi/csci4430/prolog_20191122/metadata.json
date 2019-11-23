@@ -1,0 +1,9 @@
+{
+  "hostname": "submittyrpi",
+  "name": "csci4430",
+  "tag": "prolog_20191122",
+  "components": [
+    "core",
+    "prolog/8.0.3"
+  ]
+}
