@@ -1,0 +1,7 @@
+# add a line to force rebuild of Docker
+
+RUN apt-get update \
+    && apt-get install -y \
+       iproute \
+    && rm -rf /var/lib/apt/lists/*
+

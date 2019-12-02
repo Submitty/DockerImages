@@ -180,8 +180,8 @@ RUN { \
 RUN ln -svT "/usr/lib/jvm/java-8-openjdk-$(dpkg --print-architecture)" /docker-java-home
 ENV JAVA_HOME /docker-java-home
 
-ENV JAVA_VERSION 8u222
-ENV JAVA_DEBIAN_VERSION 8u222-b10-1~deb9u1
+ENV JAVA_VERSION 8u232
+ENV JAVA_DEBIAN_VERSION 8u232-b09-1~deb9u1
 
 # see https://bugs.debian.org/775775
 # and https://github.com/docker-library/java/issues/19#issuecomment-70546872
@@ -211,7 +211,7 @@ RUN set -ex; \
 
 # see CA_CERTIFICATES_JAVA_VERSION notes above
 RUN /var/lib/dpkg/info/ca-certificates-java.postinst configure
-RUN pip3 install aioconsole
+RUN pip3 install aioconsole 
 
 # Go install
 
@@ -258,6 +258,12 @@ RUN apt-get update \
         emacs \
         nano \
         vim \
+    && rm -rf /var/lib/apt/lists/*
+# add a line to force rebuild of Docker
+
+RUN apt-get update \
+    && apt-get install -y \
+       iproute \
     && rm -rf /var/lib/apt/lists/*
 
 CMD ["/bin/bash"]
