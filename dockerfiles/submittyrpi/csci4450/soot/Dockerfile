@@ -1,3 +1,12 @@
+FROM debian:stretch-slim
+
+RUN apt-get update \
+    && apt-get -y --no-install-recommends install \
+      grep \
+      libseccomp-dev \
+      libseccomp2 \
+      procps \
+    && rm -rf /var/lib/apt/lists/*
 #
 # Source: https://github.com/docker-library/openjdk/blob/master/8/jdk/slim/Dockerfile
 #
@@ -68,3 +77,19 @@ RUN set -ex; \
 
 # see CA_CERTIFICATES_JAVA_VERSION notes above
 RUN /var/lib/dpkg/info/ca-certificates-java.postinst configure
+
+ENV SUBMITTY_INSTALL_DIR /usr/local/submitty
+
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends curl \
+  && rm -rf /var/lib/apt/lists/* \
+  && mkdir -p ${SUBMITTY_INSTALL_DIR}/java_tools/soot \
+  && cd ${SUBMITTY_INSTALL_DIR}/java_tools/soot \
+  && curl http://www.cs.rpi.edu/~milanova/soot-develop.jar > soot-develop.jar \
+  && curl http://www.cs.rpi.edu/~milanova/rt.jar > rt.jar \
+  && curl https://soot-build.cs.uni-paderborn.de/public/origin/develop/soot/soot-develop/build/sootclasses-trunk.jar > sootclasses-trunk.jar \
+  && curl https://soot-build.cs.uni-paderborn.de/public/origin/develop/soot/soot-develop/build/sootclasses-trunk-jar-with-dependencies.jar > sootclasses-trunk-jar-with-dependencies.jar \
+  && cd / \
+  && apt-get purge -y --auto-remove curl
+
+CMD ["/bin/bash"]

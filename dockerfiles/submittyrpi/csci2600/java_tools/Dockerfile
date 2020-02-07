@@ -1,3 +1,12 @@
+FROM debian:stretch-slim
+
+RUN apt-get update \
+    && apt-get -y --no-install-recommends install \
+      grep \
+      libseccomp-dev \
+      libseccomp2 \
+      procps \
+    && rm -rf /var/lib/apt/lists/*
 #
 # Source: https://github.com/docker-library/openjdk/blob/master/8/jdk/slim/Dockerfile
 #
@@ -68,3 +77,50 @@ RUN set -ex; \
 
 # see CA_CERTIFICATES_JAVA_VERSION notes above
 RUN /var/lib/dpkg/info/ca-certificates-java.postinst configure
+ENV SUBMITTY_INSTALL_DIR /usr/local/submitty
+ENV JUNIT_VERSION 4.12
+ENV HAMCREST_VERSION 1.3
+ENV JACOCO_VERSION 0.8.0
+
+
+# Create the necessary directories
+RUN mkdir -p ${SUBMITTY_INSTALL_DIR}/java_tools/JUnit \
+  && mkdir -p ${SUBMITTY_INSTALL_DIR}/java_tools/hamcrest \
+  && mkdir -p ${SUBMITTY_INSTALL_DIR}/java_tools/jacoco 
+
+# Get JUnit
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends wget \
+  && rm -rf /var/lib/apt/lists/* \
+  && echo 0 \
+  && cd ${SUBMITTY_INSTALL_DIR}/java_tools/JUnit \
+  && wget https://repo1.maven.org/maven2/junit/junit/${JUNIT_VERSION}/junit-${JUNIT_VERSION}.jar -o /dev/null > /dev/null 2>&1 \
+  && cd / \
+  && apt-get purge -y --auto-remove wget
+
+# Get Hamcrest
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends wget \
+  && rm -rf /var/lib/apt/lists/* \
+  && cd ${SUBMITTY_INSTALL_DIR}/java_tools/hamcrest \
+  && wget https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/${HAMCREST_VERSION}/hamcrest-core-${HAMCREST_VERSION}.jar -o /dev/null > /dev/null 2>&1 \
+  && cd / \
+  && apt-get purge -y --auto-remove wget
+
+# Get Jacoco
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends wget unzip \
+  && rm -rf /var/lib/apt/lists/* \
+  && cd ${SUBMITTY_INSTALL_DIR}/java_tools/jacoco  \
+  && wget https://github.com/jacoco/jacoco/releases/download/v${JACOCO_VERSION}/jacoco-${JACOCO_VERSION}.zip -o /dev/null > /dev/null 2>&1 \
+  && mkdir jacoco-${JACOCO_VERSION} \
+  && unzip jacoco-${JACOCO_VERSION}.zip -d jacoco-${JACOCO_VERSION} > /dev/null \
+  && mv jacoco-${JACOCO_VERSION}/lib/jacococli.jar jacococli.jar \
+  && mv jacoco-${JACOCO_VERSION}/lib/jacocoagent.jar jacocoagent.jar \
+  && rm -rf jacoco-${JACOCO_VERSION} \
+  && rm -f jacoco-${JACOCO_VERSION}.zip \
+  && chmod o+r . *.jar \
+  && cd / \
+  && apt-get purge -y --auto-remove wget unzip
+
+CMD ["/bin/bash"]
