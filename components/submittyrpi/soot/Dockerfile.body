@@ -11,5 +11,7 @@ RUN apt-get update \
   && curl https://soot-build.cs.uni-paderborn.de/public/origin/develop/soot/soot-develop/build/sootclasses-trunk.jar > sootclasses-trunk.jar \
   && curl https://soot-build.cs.uni-paderborn.de/public/origin/develop/soot/soot-develop/build/sootclasses-trunk-jar-with-dependencies.jar > sootclasses-trunk-jar-with-dependencies.jar \
   && cd / \
+  && chown -R root:${COURSE_BUILDERS_GROUP} ${SUBMITTY_INSTALL_DIR}/java_tools \
+  && chmod -R 755 ${SUBMITTY_INSTALL_DIR}/java_tools \
   && apt-get purge -y --auto-remove curl
 

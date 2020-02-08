@@ -123,6 +123,23 @@ RUN apt-get update \
   && cd / \
   && apt-get purge -y --auto-remove wget unzip
 
+# Retrieve the Submitty Testrunner.
+# TODO: replace this with something more sustainable than a wget from master
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends wget \
+  && rm -rf /var/lib/apt/lists/* \
+  && wget https://raw.githubusercontent.com/Submitty/Submitty/master/junit_test_runner/TestRunner.java --output-document=${SUBMITTY_INSTALL_DIR}/java_tools/JUnit/TestRunner.java \
+  && cd ${SUBMITTY_INSTALL_DIR}/java_tools/JUnit/ \
+  && /usr/bin/javac -cp ./junit-4.12.jar TestRunner.java \
+  && cd / \
+  && apt-get purge -y --auto-remove wget
+
+
+# Fix Permissions
+RUN chown -R root:${COURSE_BUILDERS_GROUP} ${SUBMITTY_INSTALL_DIR}/java_tools \
+  && chmod -R 755 ${SUBMITTY_INSTALL_DIR}/java_tools
+
+
 ENV MONO_VERSION 6.8.0.96
 
 RUN apt-get update \
@@ -136,14 +153,14 @@ RUN apt-get update \
   && apt-key list | grep Xamarin \
   && apt-get purge -y --auto-remove gnupg dirmngr
 
-RUN echo "deb http://download.mono-project.com/repo/debian stable-stretch/snapshots/$MONO_VERSION main" > /etc/apt/sources.list.d/mono-official-vs.list \
+RUN echo "deb http://download.mono-project.com/repo/debian stable-stretch main" > /etc/apt/sources.list.d/mono-official.list \
   && apt-get update \
-  && apt-get install -y mono-runtime \
+  && apt-get install -y mono-devel \
   && rm -rf /var/lib/apt/lists/* /tmp/*
-
+  
 
 ENV DAFNY_VER v2.3.0
-ENV DAFNY_FILE dafny-2.3.0.10506-x64-ubuntu-16.04.zip
+ENV DAFNY_FILE dafny-2.3.0.10506-x64-debian-8.11.zip
 ENV SUBMITTY_INSTALL_DIR /usr/local/submitty
 
 RUN apt-get update \
@@ -151,13 +168,16 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* \
   && mkdir -p ${SUBMITTY_INSTALL_DIR}/Dafny \
   && chown root:${COURSE_BUILDERS_GROUP} ${SUBMITTY_INSTALL_DIR}/Dafny \
-  && chmod 751 ${SUBMITTY_INSTALL_DIR}/Dafny \
+  && chmod -R 755 ${SUBMITTY_INSTALL_DIR}/Dafny \
   && cd ${SUBMITTY_INSTALL_DIR}/Dafny \
   && wget https://github.com/Microsoft/dafny/releases/download/${DAFNY_VER}/${DAFNY_FILE} \
   && unzip $DAFNY_FILE \
   && rm -f $DAFNY_FILE  \
-  && chmod -R o+rx dafny \
+  && chmod -R 755 ${SUBMITTY_INSTALL_DIR}/Dafny \
   && cd / \
   && apt-get purge -y --auto-remove wget unzip
 
-CMD ["/bin/bash"]
+# dafny requires libgomp1
+RUN apt-get update \
+  && apt-get install -y libgomp1 \
+  && rm -rf /var/lib/apt/lists/* CMD ["/bin/bash"]

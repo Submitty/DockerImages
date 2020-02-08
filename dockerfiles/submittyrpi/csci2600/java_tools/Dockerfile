@@ -123,4 +123,21 @@ RUN apt-get update \
   && cd / \
   && apt-get purge -y --auto-remove wget unzip
 
+# Retrieve the Submitty Testrunner.
+# TODO: replace this with something more sustainable than a wget from master
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends wget \
+  && rm -rf /var/lib/apt/lists/* \
+  && wget https://raw.githubusercontent.com/Submitty/Submitty/master/junit_test_runner/TestRunner.java --output-document=${SUBMITTY_INSTALL_DIR}/java_tools/JUnit/TestRunner.java \
+  && cd ${SUBMITTY_INSTALL_DIR}/java_tools/JUnit/ \
+  && /usr/bin/javac -cp ./junit-4.12.jar TestRunner.java \
+  && cd / \
+  && apt-get purge -y --auto-remove wget
+
+
+# Fix Permissions
+RUN chown -R root:${COURSE_BUILDERS_GROUP} ${SUBMITTY_INSTALL_DIR}/java_tools \
+  && chmod -R 755 ${SUBMITTY_INSTALL_DIR}/java_tools
+
+
 CMD ["/bin/bash"]
