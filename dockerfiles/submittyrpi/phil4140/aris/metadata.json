@@ -1,0 +1,11 @@
+{
+  "hostname": "submittyrpi",
+  "name": "phil4140",
+  "tag": "aris",
+  "components": [
+    "core",
+    "clang/6.0",
+    "rust/1.41.1",
+    "submittyrpi/aris"
+  ]
+}

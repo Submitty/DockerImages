@@ -1,0 +1,16 @@
+
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends git \
+  && rm -rf /var/lib/apt/lists/* \
+  && echo "#/bin/bash auto_grader\n/auto_grader \$1 \$2" > /auto_grader.sh \
+  && cat "/auto_grader.sh" \
+  && mkdir /work \
+  && cd /work \
+  && git clone https://github.com/Bram-Hub/Aris.git \
+  && cd Aris/libaris/src/main/rust \
+  && cargo build --release --bin auto_grader \
+  && cp target/release/auto_grader /auto_grader \
+  && cd / \
+  && chmod -R 755 /auto_grader /auto_grader.sh \
+  && rm -r /work \
+  && apt-get purge -y --auto-remove git
