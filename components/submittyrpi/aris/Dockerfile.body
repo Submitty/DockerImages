@@ -3,7 +3,6 @@ RUN apt-get update \
   && apt-get install -y --no-install-recommends git \
   && rm -rf /var/lib/apt/lists/* \
   && echo "#/bin/bash auto_grader\n/auto_grader \$1 \$2" > /auto_grader.sh \
-  && cat "/auto_grader.sh" \
   && mkdir /work \
   && cd /work \
   && git clone https://github.com/Bram-Hub/Aris.git \
