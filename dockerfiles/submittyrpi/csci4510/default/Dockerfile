@@ -180,8 +180,8 @@ RUN { \
 RUN ln -svT "/usr/lib/jvm/java-8-openjdk-$(dpkg --print-architecture)" /docker-java-home
 ENV JAVA_HOME /docker-java-home
 
-ENV JAVA_VERSION 8u232
-ENV JAVA_DEBIAN_VERSION 8u232-b09-1~deb9u1
+ENV JAVA_VERSION 8u265
+ENV JAVA_DEBIAN_VERSION 8u265-b01-0+deb9u1
 
 # see https://bugs.debian.org/775775
 # and https://github.com/docker-library/java/issues/19#issuecomment-70546872
@@ -253,18 +253,19 @@ RUN set -eux; \
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 
-# Rust install
 
-ENV RUST_VERSION 1.46.0
+# Rust install
+ENV RUSTUP_HOME /rust
+ENV CARGO_HOME /cargo
 RUN set -eux; \
     apt-get update; \
-    apt-get install -y --no-install-recommends wget; \
-    url="https://static.rust-lang.org/dist/rust-${RUST_VERSION}-x86_64-unknown-linux-gnu.tar.gz"; \
-    wget -O rust.tgz "$url"; \
-    mkdir -p /tmp/rust; \
-    tar -C /tmp/rust -xvf rust.tgz; \
-    rm rust.tgz; \
-    "/tmp/rust/rust-${RUST_VERSION}-x86_64-unknown-linux-gnu/install.sh"; # installs to /usr/local/bin by default
+    apt-get install -y --no-install-recommends curl; \
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > /tmp/rustup.sh; \
+    chmod +x /tmp/rustup.sh; \
+    /tmp/rustup.sh -y; \
+    rm /tmp/rustup.sh;
+    
+ENV PATH $CARGO_HOME/bin:$PATH
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
