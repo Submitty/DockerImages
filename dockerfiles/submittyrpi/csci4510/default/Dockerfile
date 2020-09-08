@@ -253,6 +253,19 @@ RUN set -eux; \
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 
+# Rust install
+
+ENV RUST_VERSION 1.46.0
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends wget; \
+    url="https://static.rust-lang.org/dist/rust-${RUST_VERSION}-x86_64-unknown-linux-gnu.tar.gz"; \
+    wget -O rust.tgz "$url"; \
+    mkdir -p /tmp/rust; \
+    tar -C /tmp/rust -xvf rust.tgz; \
+    rm rust.tgz; \
+    "/tmp/rust/rust-${RUST_VERSION}-x86_64-unknown-linux-gnu/install.sh"; # installs to /usr/local/bin by default
+
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         emacs \
