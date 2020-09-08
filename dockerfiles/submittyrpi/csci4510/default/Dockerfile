@@ -180,11 +180,13 @@ RUN { \
 RUN ln -svT "/usr/lib/jvm/java-8-openjdk-$(dpkg --print-architecture)" /docker-java-home
 ENV JAVA_HOME /docker-java-home
 
-ENV JAVA_VERSION 8u265
+# Look here to update: https://packages.debian.org/stretch/openjdk-8-jdk-headless
+ENV JAVA_VERSION 8u232
 ENV JAVA_DEBIAN_VERSION 8u265-b01-0+deb9u1
 
 # see https://bugs.debian.org/775775
 # and https://github.com/docker-library/java/issues/19#issuecomment-70546872
+# Look here to update: https://packages.debian.org/stretch/ca-certificates-java
 ENV CA_CERTIFICATES_JAVA_VERSION 20170929~deb9u3
 
 RUN set -ex; \
@@ -253,26 +255,47 @@ RUN set -eux; \
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 
-
-# Rust install
-ENV RUSTUP_HOME /rust
-ENV CARGO_HOME /cargo
-RUN set -eux; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends curl; \
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > /tmp/rustup.sh; \
-    chmod +x /tmp/rustup.sh; \
-    /tmp/rustup.sh -y; \
-    rm /tmp/rustup.sh;
-    
-ENV PATH $CARGO_HOME/bin:$PATH
-
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         emacs \
         nano \
         vim \
     && rm -rf /var/lib/apt/lists/*
+
+ENV RUSTUP_HOME=/usr/local/rustup \
+    CARGO_HOME=/usr/local/cargo \
+    PATH=/usr/local/cargo/bin:$PATH \
+    RUST_VERSION=1.41.1
+
+RUN set -eux; apt-get update; \
+    apt-get install -y --no-install-recommends \
+        ca-certificates \
+        gcc \
+        libc6-dev \
+        wget \
+        ; \
+    dpkgArch="$(dpkg --print-architecture)"; \
+    case "${dpkgArch##*-}" in \
+        amd64) rustArch='x86_64-unknown-linux-gnu'; rustupSha256='ad1f8b5199b3b9e231472ed7aa08d2e5d1d539198a15c5b1e53c746aad81d27b' ;; \
+        armhf) rustArch='armv7-unknown-linux-gnueabihf'; rustupSha256='6c6c3789dabf12171c7f500e06d21d8004b5318a5083df8b0b02c0e5ef1d017b' ;; \
+        arm64) rustArch='aarch64-unknown-linux-gnu'; rustupSha256='26942c80234bac34b3c1352abbd9187d3e23b43dae3cf56a9f9c1ea8ee53076d' ;; \
+        i386) rustArch='i686-unknown-linux-gnu'; rustupSha256='27ae12bc294a34e566579deba3e066245d09b8871dc021ef45fc715dced05297' ;; \
+        *) echo >&2 "unsupported architecture: ${dpkgArch}"; exit 1 ;; \
+    esac; \
+    url="https://static.rust-lang.org/rustup/archive/1.21.1/${rustArch}/rustup-init"; \
+    wget "$url"; \
+    echo "${rustupSha256} *rustup-init" | sha256sum -c -; \
+    chmod +x rustup-init; \
+    ./rustup-init -y --no-modify-path --profile minimal --default-toolchain $RUST_VERSION; \
+    rm rustup-init; \
+    chmod -R a+w $RUSTUP_HOME $CARGO_HOME; \
+    rustup --version; \
+    cargo --version; \
+    rustc --version; \
+    apt-get remove -y --auto-remove \
+        wget \
+        ; \
+    rm -rf /var/lib/apt/lists/*;
 # add a line to force rebuild of Docker
 
 RUN apt-get update \
