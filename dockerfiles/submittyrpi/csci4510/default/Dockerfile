@@ -265,9 +265,10 @@ RUN apt-get update \
 ENV RUSTUP_HOME=/usr/local/rustup \
     CARGO_HOME=/usr/local/cargo \
     PATH=/usr/local/cargo/bin:$PATH \
-    RUST_VERSION=1.41.1
+    RUST_VERSION=1.46.0
 
-RUN set -eux; apt-get update; \
+RUN set -eux; \
+    apt-get update; \
     apt-get install -y --no-install-recommends \
         ca-certificates \
         gcc \
