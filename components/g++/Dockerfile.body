@@ -1,3 +1,4 @@
-RUN apt-get update 
-    && apt-get -y --no-install-recommends install install gcc
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends  g++ \
     && rm -rf /var/lib/apt/lists/*
+
