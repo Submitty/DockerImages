@@ -9,7 +9,7 @@
     "submittyrpi/csci4510",
     "submittyrpi/csci4510_go",
     "editors",
-    "rust/1.41.1",
+    "rust/1.46.0",
     "submittyrpi/csci4510_chaos_testing"
   ]
 }
