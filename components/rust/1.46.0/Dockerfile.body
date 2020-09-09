@@ -1,8 +1,9 @@
-
 ENV RUSTUP_HOME=/usr/local/rustup \
     CARGO_HOME=/usr/local/cargo \
     PATH=/usr/local/cargo/bin:$PATH \
-    RUST_VERSION=1.46.0
+    RUST_VERSION=1.46.0 \
+    DEPENDENCY_TOML='https://github.com/CerulanLumina/Submitty-Rust-Dependency-Curator.git' \
+    DEPENDENCY_COMMIT='b65563d6779d6cb551e5555758d9316b7919e420'
 
 RUN set -eux; \
     apt-get update; \
@@ -11,6 +12,7 @@ RUN set -eux; \
         gcc \
         libc6-dev \
         wget \
+        git \
         ; \
     dpkgArch="$(dpkg --print-architecture)"; \
     case "${dpkgArch##*-}" in \
@@ -30,7 +32,11 @@ RUN set -eux; \
     rustup --version; \
     cargo --version; \
     rustc --version; \
+    git clone -n "$DEPENDENCY_TOML" dependency_curator; \
+    git --work-tree=dependency_curator --git-dir=dependency_curator/.git checkout; \
+    cargo fetch --manifest-path=dependency_curator/Cargo.toml; \
     apt-get remove -y --auto-remove \
         wget \
+        git \
         ; \
     rm -rf /var/lib/apt/lists/*;
