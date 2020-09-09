@@ -1,5 +1,5 @@
-ENV DRMEMORY_TAG release_2.0.1
-ENV DRMEMORY_VERSION 2.0.1-2
+ENV DRMEMORY_TAG release_2.3.0
+ENV DRMEMORY_VERSION 2.3.0-1
 ENV SUBMITTY_INSTALL_DIR /usr/local/submitty
 
 RUN apt-get update \
@@ -14,3 +14,4 @@ RUN apt-get update \
     && chmod -R 755 ${SUBMITTY_INSTALL_DIR}/drmemory \
     && apt-get purge -y --auto-remove wget \
     && rm -rf /var/lib/apt/lists/*
+
