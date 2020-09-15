@@ -1,3 +1,4 @@
+
 ENV DRMEMORY_TAG release_2.3.0
 ENV DRMEMORY_VERSION 2.3.0-1
 ENV SUBMITTY_INSTALL_DIR /usr/local/submitty
@@ -10,7 +11,7 @@ RUN apt-get update \
     && tar -xpzf DrMemory-Linux-${DRMEMORY_VERSION}.tar.gz \
     && rsync --delete -a /tmp/DrMemory-Linux-${DRMEMORY_VERSION}/ ${SUBMITTY_INSTALL_DIR}/drmemory \
     && rm -rf /tmp/DrMemory* \
-    && chown -R root:${COURSE_BUILDERS_GROUP} ${SUBMITTY_INSTALL_DIR}/drmemory \
+    && chown -R root ${SUBMITTY_INSTALL_DIR}/drmemory \
     && chmod -R 755 ${SUBMITTY_INSTALL_DIR}/drmemory \
     && apt-get purge -y --auto-remove wget \
     && rm -rf /var/lib/apt/lists/*
