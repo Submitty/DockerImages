@@ -20,6 +20,7 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends  g++ \
     && rm -rf /var/lib/apt/lists/*
 
+
 ENV DRMEMORY_TAG release_2.3.0
 ENV DRMEMORY_VERSION 2.3.0-1
 ENV SUBMITTY_INSTALL_DIR /usr/local/submitty
@@ -32,7 +33,7 @@ RUN apt-get update \
     && tar -xpzf DrMemory-Linux-${DRMEMORY_VERSION}.tar.gz \
     && rsync --delete -a /tmp/DrMemory-Linux-${DRMEMORY_VERSION}/ ${SUBMITTY_INSTALL_DIR}/drmemory \
     && rm -rf /tmp/DrMemory* \
-    && chown -R root:${COURSE_BUILDERS_GROUP} ${SUBMITTY_INSTALL_DIR}/drmemory \
+    && chown -R root ${SUBMITTY_INSTALL_DIR}/drmemory \
     && chmod -R 755 ${SUBMITTY_INSTALL_DIR}/drmemory \
     && apt-get purge -y --auto-remove wget \
     && rm -rf /var/lib/apt/lists/*
@@ -55,6 +56,7 @@ RUN apt-get update \
     && wget -nv "https://github.com/Submitty/AnalysisTools/releases/download/${AnalysisTools_Version}/count" -O ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisTools/count \
     && wget -nv "https://github.com/Submitty/AnalysisTools/releases/download/${AnalysisTools_Version}/plagiarism" -O ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisTools/plagiarism \
     && wget -nv "https://github.com/Submitty/AnalysisTools/releases/download/${AnalysisTools_Version}/diagnostics" -O ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisTools/diagnostics \
+    && chmod -R 755 ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisTools \
     && apt-get purge -y --auto-remove wget \
     && rm -rf /var/lib/apt/lists/*
 
