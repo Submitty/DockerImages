@@ -6,9 +6,9 @@ RUN apt-get update \
   && mkdir /work \
   && cd /work \
   && git clone https://github.com/Bram-Hub/Aris.git \
-  && cd Aris/libaris/src/main/rust \
-  && cargo build --release --bin auto_grader \
-  && cp target/release/auto_grader /auto_grader \
+  && cd Aris \
+  && cargo build --release --bin aris-auto-grader \
+  && cp target/release/aris-auto-grader /auto_grader \
   && cd / \
   && chmod -R 755 /auto_grader /auto_grader.sh \
   && rm -r /work \
