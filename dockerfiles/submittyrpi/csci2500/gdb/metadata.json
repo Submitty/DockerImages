@@ -1,0 +1,12 @@
+{
+  "hostname": "submittyrpi",
+  "name": "csci2500",
+  "tag": "gdb",
+  "components": [
+    "core",
+    "clang",
+    "g++",
+    "valgrind",
+    "gdb"
+  ]
+}
