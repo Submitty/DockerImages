@@ -1,0 +1,13 @@
+{
+  "hostname": "submittyrpi",
+  "name": "csci4510",
+  "tag": "java-11",
+  "components": [
+    "core",
+    "python/3.6",
+    "java/openjdk/11",
+    "submittyrpi/csci4510",
+    "submittyrpi/csci4510_go",
+    "editors"
+  ]
+}
