@@ -44,12 +44,14 @@ RUN { \
 RUN ln -svT "/usr/lib/jvm/java-8-openjdk-$(dpkg --print-architecture)" /docker-java-home
 ENV JAVA_HOME /docker-java-home
 
-ENV JAVA_VERSION 8u181
-ENV JAVA_DEBIAN_VERSION 8u181-b13-2~deb9u1
+# Look here to update: https://packages.debian.org/stretch/openjdk-8-jdk-headless
+ENV JAVA_VERSION 8u232
+ENV JAVA_DEBIAN_VERSION 8u265-b01-0+deb9u1
 
 # see https://bugs.debian.org/775775
 # and https://github.com/docker-library/java/issues/19#issuecomment-70546872
-ENV CA_CERTIFICATES_JAVA_VERSION 20170531+nmu1
+# Look here to update: https://packages.debian.org/stretch/ca-certificates-java
+ENV CA_CERTIFICATES_JAVA_VERSION 20170929~deb9u3
 
 RUN set -ex; \
 	\
