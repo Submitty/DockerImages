@@ -9,6 +9,7 @@
     "drmemory",
     "valgrind",
     "imagemagick",
-    "analysis_tools"
+    "analysis_tools",
+    "analysis_tools_ts"
   ]
 }

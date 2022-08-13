@@ -19,6 +19,7 @@ RUN apt-get install -qqy imagemagick
 ENV DRMEMORY_TAG release_2.0.1
 ENV DRMEMORY_VERSION 2.0.1-2
 ENV AnalysisTools_Version v.18.06.00
+ENV AnalysisToolsTS_Version v22.08.02
 ENV SUBMITTY_INSTALL_DIR /usr/local/submitty
 
 RUN apt-get update \
@@ -35,6 +36,9 @@ RUN apt-get update \
     && wget -nv "https://github.com/Submitty/AnalysisTools/releases/download/${AnalysisTools_Version}/count" -O ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisTools/count \
     && wget -nv "https://github.com/Submitty/AnalysisTools/releases/download/${AnalysisTools_Version}/plagiarism" -O ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisTools/plagiarism \
     && wget -nv "https://github.com/Submitty/AnalysisTools/releases/download/${AnalysisTools_Version}/diagnostics" -O ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisTools/diagnostics \
+    && mkdir -p ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisToolsTS/build \
+    && wget -nv "https://github.com/Submitty/AnalysisToolsTS/releases/download/${AnalysisToolsTS_Version}/submitty_count_ts" -O ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisToolsTS/build/submitty_count_ts \
+    && wget -nv "https://github.com/Submitty/AnalysisToolsTS/releases/download/${AnalysisToolsTS_Version}/submitty_diagnostics_ts" -O ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisToolsTS/build/submitty_diagnostics_ts \
     && apt-get purge -y --auto-remove wget \
     && rm -rf /var/lib/apt/lists/*
 

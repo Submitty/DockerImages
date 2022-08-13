@@ -60,4 +60,16 @@ RUN apt-get update \
     && apt-get purge -y --auto-remove wget \
     && rm -rf /var/lib/apt/lists/*
 
+
+ENV AnalysisToolsTS_Version v22.08.02
+ENV SUBMITTY_INSTALL_DIR /usr/local/submitty
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends wget \
+    && mkdir -p ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisToolsTS/build \
+    && wget -nv "https://github.com/Submitty/AnalysisToolsTS/releases/download/${AnalysisToolsTS_Version}/submitty_count_ts" -O ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisToolsTS/build/submitty_count_ts \
+    && wget -nv "https://github.com/Submitty/AnalysisToolsTS/releases/download/${AnalysisToolsTS_Version}/submitty_diagnostics_ts" -O ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisToolsTS/build/submitty_diagnostics_ts \
+    && chmod -R 755 ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisTools \
+    && apt-get purge -y --auto-remove wget \
+    && rm -rf /var/lib/apt/lists/*
 CMD ["/bin/bash"]
