@@ -1,4 +1,4 @@
-FROM debian:stretch-slim
+FROM debian:buster-slim
 
 RUN apt-get update \
     && apt-get -y --no-install-recommends install \
@@ -7,7 +7,7 @@ RUN apt-get update \
       libseccomp2 \
       procps \
     && rm -rf /var/lib/apt/lists/*
-RUN echo "deb http://ftp.debian.org/debian stretch-backports main" >> /etc/apt/sources.list \
+RUN echo "deb http://ftp.debian.org/debian buster-backports main" >> /etc/apt/sources.list \
     && apt-get update \
     && apt-get -y --no-install-recommends install \
       clang-6.0 \
