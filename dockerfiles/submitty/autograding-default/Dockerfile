@@ -5,6 +5,7 @@
 # this file directly.
 
 FROM ubuntu:20.04
+ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update
 RUN apt-get install -qqy python python-dev python3 python3-dev libpython3.5
