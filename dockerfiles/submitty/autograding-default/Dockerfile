@@ -16,8 +16,8 @@ libfile-mmagic-perl libgnupg-interface-perl libbsd-resource-perl libarchive-zip-
 g++-multilib jq libseccomp-dev libseccomp2 seccomp junit flex bison spim poppler-utils
 RUN apt-get install -qqy imagemagick
 
-ENV DRMEMORY_TAG release_2.0.1
-ENV DRMEMORY_VERSION 2.0.1-2
+ENV DRMEMORY_TAG release_2.5.0
+ENV DRMEMORY_VERSION 2.5.0
 ENV AnalysisTools_Version v.18.06.00
 ENV SUBMITTY_INSTALL_DIR /usr/local/submitty
 

@@ -21,8 +21,8 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 
-ENV DRMEMORY_TAG release_2.3.0
-ENV DRMEMORY_VERSION 2.3.0-1
+ENV DRMEMORY_TAG release_2.5.0
+ENV DRMEMORY_VERSION 2.5.0
 ENV SUBMITTY_INSTALL_DIR /usr/local/submitty
 
 RUN apt-get update \
@@ -54,6 +54,9 @@ RUN apt-get update \
     && apt-get install -y xvfb \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update \
+    && apt-get install -y time \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV AnalysisTools_Version v.18.06.00
 ENV SUBMITTY_INSTALL_DIR /usr/local/submitty
