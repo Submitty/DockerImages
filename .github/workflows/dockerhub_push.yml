@@ -1,0 +1,271 @@
+name: Push to Docker Hub
+
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+
+  push-images-submitty:
+    name: Push docker images (submitty)
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repo
+      uses: actions/checkout@v3
+    - name: Docker Hub login
+      uses: docker/login-action@releases/v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME_SUBMITTY }}
+        password: ${{ secrets.DOCKER_PASSWORD_SUBMITTY }}
+
+    - name: Build and push submitty/clang:3.8
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submitty/clang/3.8
+        push: true
+        tags: submitty/clang:3.8
+
+    - name: Build and push submitty/clang:4.0
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submitty/clang/4.0
+        push: true
+        tags: submitty/clang:4.0
+
+    - name: Build and push submitty/clang:5.0
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submitty/clang/5.0
+        push: true
+        tags: submitty/clang:5.0
+
+    - name: Build and push submitty/clang:6.0
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submitty/clang/6.0
+        push: true
+        tags: submitty/clang:6.0
+
+    - name: Build and push submitty/clang:7
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submitty/clang/7
+        push: true
+        tags: submitty/clang:7
+
+    - name: Build and push submitty/clang:8
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submitty/clang/8
+        push: true
+        tags: submitty/clang:8
+
+    - name: Build and push submitty/java:11
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submitty/java/11
+        push: true
+        tags: submitty/java:11
+
+    - name: Build and push submitty/java:8
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submitty/java/8
+        push: true
+        tags: submitty/java:8
+
+    - name: Build and push submitty/php:7.3-cli
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submitty/php/7.3-cli
+        push: true
+        tags: submitty/php:7.3-cli
+
+    - name: Build and push submitty/python:2.7
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submitty/python/2.7
+        push: true
+        tags: submitty/python:2.7
+
+    - name: Build and push submitty/python:3.5
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submitty/python/3.5
+        push: true
+        tags: submitty/python:3.5
+
+    - name: Build and push submitty/python:3.6
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submitty/python/3.6
+        push: true
+        tags: submitty/python:3.6
+
+    - name: Build and push submitty/python:3.7
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submitty/python/3.7
+        push: true
+        tags: submitty/python:3.7
+
+    - name: Build and push submitty/tutorial:database_client
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submitty/tutorial/database_client
+        push: true
+        tags: submitty/tutorial:database_client
+
+  push-images-submittyrpi:
+    name: Push docker images (submittyrpi)
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repo
+      uses: actions/checkout@v3
+    - name: Docker Hub login
+      uses: docker/login-action@releases/v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME_SUBMITTYRPI }}
+        password: ${{ secrets.DOCKER_PASSWORD_SUBMITTYRPI }}
+
+    - name: Build and push submittyrpi/csci1200:default
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submittyrpi/csci1200/default
+        push: true
+        tags: submittyrpi/csci1200:default
+
+    - name: Build and push submittyrpi/csci2500:gdb
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submittyrpi/csci2500/gdb
+        push: true
+        tags: submittyrpi/csci2500:gdb
+
+    - name: Build and push submittyrpi/csci2500:spim
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submittyrpi/csci2500/spim
+        push: true
+        tags: submittyrpi/csci2500:spim
+
+    - name: Build and push submittyrpi/csci2600:java_tools
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submittyrpi/csci2600/java_tools
+        push: true
+        tags: submittyrpi/csci2600:java_tools
+
+    - name: Build and push submittyrpi/csci2600:java_tools_dafny
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submittyrpi/csci2600/java_tools_dafny
+        push: true
+        tags: submittyrpi/csci2600:java_tools_dafny
+
+    - name: Build and push submittyrpi/csci4220:instructor_python
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submittyrpi/csci4220/instructor_python
+        push: true
+        tags: submittyrpi/csci4220:instructor_python
+
+    - name: Build and push submittyrpi/csci4270:latest
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submittyrpi/csci4270/20190912
+        push: true
+        tags: submittyrpi/csci4270:latest
+
+    - name: Build and push submittyrpi/csci4270:20210121
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submittyrpi/csci4270/20210121
+        push: true
+        tags: submittyrpi/csci4270:20210121
+
+    - name: Build and push submittyrpi/csci4380:latest
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submittyrpi/csci4380/latest
+        push: true
+        tags: submittyrpi/csci4380:latest
+
+    - name: Build and push submittyrpi/csci4430:prolog_20191122
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submittyrpi/csci4430/prolog_20191122
+        push: true
+        tags: submittyrpi/csci4430:prolog_20191122
+
+    - name: Build and push submittyrpi/csci4450:soot
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submittyrpi/csci4450/soot
+        push: true
+        tags: submittyrpi/csci4450:soot
+
+    - name: Build and push submittyrpi/csci4510:combined
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submittyrpi/csci4510/combined
+        push: true
+        tags: submittyrpi/csci4510:combined
+
+    - name: Build and push submittyrpi/csci4510:default
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submittyrpi/csci4510/default
+        push: true
+        tags: submittyrpi/csci4510:default
+
+    - name: Build and push submittyrpi/csci4510:go
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submittyrpi/csci4510/go
+        push: true
+        tags: submittyrpi/csci4510:go
+
+    - name: Build and push submittyrpi/csci4510:java-11
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submittyrpi/csci4510/java-11
+        push: true
+        tags: submittyrpi/csci4510:java-11
+
+    - name: Build and push submittyrpi/csci4510:java-8
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submittyrpi/csci4510/java-8
+        push: true
+        tags: submittyrpi/csci4510:java-8
+
+    - name: Build and push submittyrpi/csci4510:project2
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submittyrpi/csci4510/project2
+        push: true
+        tags: submittyrpi/csci4510:project2
+
+    - name: Build and push submittyrpi/csci4510:python-3.6
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submittyrpi/csci4510/python-3.6
+        push: true
+        tags: submittyrpi/csci4510:python-3.6
+
+    - name: Build and push submittyrpi/csci4510:rust
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submittyrpi/csci4510/rust
+        push: true
+        tags: submittyrpi/csci4510:rust
+
+    - name: Build and push submittyrpi/phil4140:aris
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submittyrpi/phil4140/aris
+        push: true
+        tags: submittyrpi/phil4140:aris
+
