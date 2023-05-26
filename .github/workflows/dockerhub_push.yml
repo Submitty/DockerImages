@@ -7,9 +7,69 @@ on:
 
 jobs:
 
+  # this job checks which containers for account "submitty" should be updated
+  check-files-submitty:
+    name: Check modified files (submitty)
+    runs-on: ubuntu-latest
+    # variables that tell which containers should be updated
+    outputs:
+      clang__tag_3_8: ${{ steps.check-files-submitty.outputs.clang__tag_3_8 }}
+      clang__tag_4_0: ${{ steps.check-files-submitty.outputs.clang__tag_4_0 }}
+      clang__tag_5_0: ${{ steps.check-files-submitty.outputs.clang__tag_5_0 }}
+      clang__tag_6_0: ${{ steps.check-files-submitty.outputs.clang__tag_6_0 }}
+      clang__tag_7: ${{ steps.check-files-submitty.outputs.clang__tag_7 }}
+      clang__tag_8: ${{ steps.check-files-submitty.outputs.clang__tag_8 }}
+      java__tag_11: ${{ steps.check-files-submitty.outputs.java__tag_11 }}
+      java__tag_8: ${{ steps.check-files-submitty.outputs.java__tag_8 }}
+      php__tag_7_3_cli: ${{ steps.check-files-submitty.outputs.php__tag_7_3_cli }}
+      python__tag_2_7: ${{ steps.check-files-submitty.outputs.python__tag_2_7 }}
+      python__tag_3_5: ${{ steps.check-files-submitty.outputs.python__tag_3_5 }}
+      python__tag_3_6: ${{ steps.check-files-submitty.outputs.python__tag_3_6 }}
+      python__tag_3_7: ${{ steps.check-files-submitty.outputs.python__tag_3_7 }}
+      tutorial__database_client: ${{ steps.check-files-submitty.outputs.tutorial__database_client }}
+    steps:
+    - name: Code checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 2
+    - name: Look for modified files
+      id: check-files-submitty
+      # look for whether any files were modified in the container's directory
+      run: |
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submitty/clang/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "clang__tag_3_8=true" >> $GITHUB_OUTPUT; else echo "clang__tag_3_8=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submitty/clang/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "clang__tag_4_0=true" >> $GITHUB_OUTPUT; else echo "clang__tag_4_0=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submitty/clang/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "clang__tag_5_0=true" >> $GITHUB_OUTPUT; else echo "clang__tag_5_0=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submitty/clang/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "clang__tag_6_0=true" >> $GITHUB_OUTPUT; else echo "clang__tag_6_0=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submitty/clang/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "clang__tag_7=true" >> $GITHUB_OUTPUT; else echo "clang__tag_7=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submitty/clang/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "clang__tag_8=true" >> $GITHUB_OUTPUT; else echo "clang__tag_8=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submitty/java/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "java__tag_11=true" >> $GITHUB_OUTPUT; else echo "java__tag_11=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submitty/java/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "java__tag_8=true" >> $GITHUB_OUTPUT; else echo "java__tag_8=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submitty/php/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "php__tag_7_3_cli=true" >> $GITHUB_OUTPUT; else echo "php__tag_7_3_cli=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submitty/python/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "python__tag_2_7=true" >> $GITHUB_OUTPUT; else echo "python__tag_2_7=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submitty/python/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "python__tag_3_5=true" >> $GITHUB_OUTPUT; else echo "python__tag_3_5=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submitty/python/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "python__tag_3_6=true" >> $GITHUB_OUTPUT; else echo "python__tag_3_6=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submitty/python/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "python__tag_3_7=true" >> $GITHUB_OUTPUT; else echo "python__tag_3_7=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submitty/tutorial/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "tutorial__database_client=true" >> $GITHUB_OUTPUT; else echo "tutorial__database_client=false" >> $GITHUB_OUTPUT; fi;
+
+  # this job pushes container images for account "submitty"
   push-images-submitty:
     name: Push docker images (submitty)
     runs-on: ubuntu-latest
+    needs: check-files-submitty
     steps:
     - name: Check out repo
       uses: actions/checkout@v3
@@ -20,6 +80,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD_SUBMITTY }}
 
     - name: Build and push submitty/clang:3.8
+      if: needs.check-files-submitty.outputs.clang__tag_3_8 == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submitty/clang/3.8
@@ -27,6 +88,7 @@ jobs:
         tags: submitty/clang:3.8
 
     - name: Build and push submitty/clang:4.0
+      if: needs.check-files-submitty.outputs.clang__tag_4_0 == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submitty/clang/4.0
@@ -34,6 +96,7 @@ jobs:
         tags: submitty/clang:4.0
 
     - name: Build and push submitty/clang:5.0
+      if: needs.check-files-submitty.outputs.clang__tag_5_0 == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submitty/clang/5.0
@@ -41,6 +104,7 @@ jobs:
         tags: submitty/clang:5.0
 
     - name: Build and push submitty/clang:6.0
+      if: needs.check-files-submitty.outputs.clang__tag_6_0 == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submitty/clang/6.0
@@ -48,6 +112,7 @@ jobs:
         tags: submitty/clang:6.0
 
     - name: Build and push submitty/clang:7
+      if: needs.check-files-submitty.outputs.clang__tag_7 == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submitty/clang/7
@@ -55,6 +120,7 @@ jobs:
         tags: submitty/clang:7
 
     - name: Build and push submitty/clang:8
+      if: needs.check-files-submitty.outputs.clang__tag_8 == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submitty/clang/8
@@ -62,6 +128,7 @@ jobs:
         tags: submitty/clang:8
 
     - name: Build and push submitty/java:11
+      if: needs.check-files-submitty.outputs.java__tag_11 == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submitty/java/11
@@ -69,6 +136,7 @@ jobs:
         tags: submitty/java:11
 
     - name: Build and push submitty/java:8
+      if: needs.check-files-submitty.outputs.java__tag_8 == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submitty/java/8
@@ -76,6 +144,7 @@ jobs:
         tags: submitty/java:8
 
     - name: Build and push submitty/php:7.3-cli
+      if: needs.check-files-submitty.outputs.php__tag_7_3_cli == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submitty/php/7.3-cli
@@ -83,6 +152,7 @@ jobs:
         tags: submitty/php:7.3-cli
 
     - name: Build and push submitty/python:2.7
+      if: needs.check-files-submitty.outputs.python__tag_2_7 == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submitty/python/2.7
@@ -90,6 +160,7 @@ jobs:
         tags: submitty/python:2.7
 
     - name: Build and push submitty/python:3.5
+      if: needs.check-files-submitty.outputs.python__tag_3_5 == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submitty/python/3.5
@@ -97,6 +168,7 @@ jobs:
         tags: submitty/python:3.5
 
     - name: Build and push submitty/python:3.6
+      if: needs.check-files-submitty.outputs.python__tag_3_6 == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submitty/python/3.6
@@ -104,6 +176,7 @@ jobs:
         tags: submitty/python:3.6
 
     - name: Build and push submitty/python:3.7
+      if: needs.check-files-submitty.outputs.python__tag_3_7 == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submitty/python/3.7
@@ -111,15 +184,94 @@ jobs:
         tags: submitty/python:3.7
 
     - name: Build and push submitty/tutorial:database_client
+      if: needs.check-files-submitty.outputs.tutorial__database_client == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submitty/tutorial/database_client
         push: true
         tags: submitty/tutorial:database_client
 
+  # this job checks which containers for account "submittyrpi" should be updated
+  check-files-submittyrpi:
+    name: Check modified files (submittyrpi)
+    runs-on: ubuntu-latest
+    # variables that tell which containers should be updated
+    outputs:
+      csci1200__default: ${{ steps.check-files-submittyrpi.outputs.csci1200__default }}
+      csci2500__gdb: ${{ steps.check-files-submittyrpi.outputs.csci2500__gdb }}
+      csci2500__spim: ${{ steps.check-files-submittyrpi.outputs.csci2500__spim }}
+      csci2600__java_tools: ${{ steps.check-files-submittyrpi.outputs.csci2600__java_tools }}
+      csci2600__java_tools_dafny: ${{ steps.check-files-submittyrpi.outputs.csci2600__java_tools_dafny }}
+      csci4220__instructor_python: ${{ steps.check-files-submittyrpi.outputs.csci4220__instructor_python }}
+      csci4270__tag_20210121: ${{ steps.check-files-submittyrpi.outputs.csci4270__tag_20210121 }}
+      csci4270__latest: ${{ steps.check-files-submittyrpi.outputs.csci4270__latest }}
+      csci4380__latest: ${{ steps.check-files-submittyrpi.outputs.csci4380__latest }}
+      csci4430__prolog_20191122: ${{ steps.check-files-submittyrpi.outputs.csci4430__prolog_20191122 }}
+      csci4450__soot: ${{ steps.check-files-submittyrpi.outputs.csci4450__soot }}
+      csci4510__combined: ${{ steps.check-files-submittyrpi.outputs.csci4510__combined }}
+      csci4510__default: ${{ steps.check-files-submittyrpi.outputs.csci4510__default }}
+      csci4510__go: ${{ steps.check-files-submittyrpi.outputs.csci4510__go }}
+      csci4510__java_11: ${{ steps.check-files-submittyrpi.outputs.csci4510__java_11 }}
+      csci4510__java_8: ${{ steps.check-files-submittyrpi.outputs.csci4510__java_8 }}
+      csci4510__project2: ${{ steps.check-files-submittyrpi.outputs.csci4510__project2 }}
+      csci4510__python_3_6: ${{ steps.check-files-submittyrpi.outputs.csci4510__python_3_6 }}
+      csci4510__rust: ${{ steps.check-files-submittyrpi.outputs.csci4510__rust }}
+      phil4140__aris: ${{ steps.check-files-submittyrpi.outputs.phil4140__aris }}
+    steps:
+    - name: Code checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 2
+    - name: Look for modified files
+      id: check-files-submittyrpi
+      # look for whether any files were modified in the container's directory
+      run: |
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submittyrpi/csci1200/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "csci1200__default=true" >> $GITHUB_OUTPUT; else echo "csci1200__default=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submittyrpi/csci2500/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "csci2500__gdb=true" >> $GITHUB_OUTPUT; else echo "csci2500__gdb=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submittyrpi/csci2500/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "csci2500__spim=true" >> $GITHUB_OUTPUT; else echo "csci2500__spim=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submittyrpi/csci2600/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "csci2600__java_tools=true" >> $GITHUB_OUTPUT; else echo "csci2600__java_tools=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submittyrpi/csci2600/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "csci2600__java_tools_dafny=true" >> $GITHUB_OUTPUT; else echo "csci2600__java_tools_dafny=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submittyrpi/csci4220/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "csci4220__instructor_python=true" >> $GITHUB_OUTPUT; else echo "csci4220__instructor_python=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submittyrpi/csci4270/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "csci4270__tag_20210121=true" >> $GITHUB_OUTPUT; else echo "csci4270__tag_20210121=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submittyrpi/csci4270/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "csci4270__latest=true" >> $GITHUB_OUTPUT; else echo "csci4270__latest=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submittyrpi/csci4380/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "csci4380__latest=true" >> $GITHUB_OUTPUT; else echo "csci4380__latest=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submittyrpi/csci4430/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "csci4430__prolog_20191122=true" >> $GITHUB_OUTPUT; else echo "csci4430__prolog_20191122=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submittyrpi/csci4450/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "csci4450__soot=true" >> $GITHUB_OUTPUT; else echo "csci4450__soot=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submittyrpi/csci4510/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "csci4510__combined=true" >> $GITHUB_OUTPUT; else echo "csci4510__combined=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submittyrpi/csci4510/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "csci4510__default=true" >> $GITHUB_OUTPUT; else echo "csci4510__default=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submittyrpi/csci4510/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "csci4510__go=true" >> $GITHUB_OUTPUT; else echo "csci4510__go=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submittyrpi/csci4510/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "csci4510__java_11=true" >> $GITHUB_OUTPUT; else echo "csci4510__java_11=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submittyrpi/csci4510/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "csci4510__java_8=true" >> $GITHUB_OUTPUT; else echo "csci4510__java_8=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submittyrpi/csci4510/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "csci4510__project2=true" >> $GITHUB_OUTPUT; else echo "csci4510__project2=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submittyrpi/csci4510/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "csci4510__python_3_6=true" >> $GITHUB_OUTPUT; else echo "csci4510__python_3_6=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submittyrpi/csci4510/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "csci4510__rust=true" >> $GITHUB_OUTPUT; else echo "csci4510__rust=false" >> $GITHUB_OUTPUT; fi;
+        COUNT=$(git diff --name-only HEAD^ HEAD | grep dockerfiles/submittyrpi/phil4140/ | wc -l)
+        if [[ $COUNT != 0 ]]; then echo "phil4140__aris=true" >> $GITHUB_OUTPUT; else echo "phil4140__aris=false" >> $GITHUB_OUTPUT; fi;
+
+  # this job pushes container images for account "submittyrpi"
   push-images-submittyrpi:
     name: Push docker images (submittyrpi)
     runs-on: ubuntu-latest
+    needs: check-files-submittyrpi
     steps:
     - name: Check out repo
       uses: actions/checkout@v3
@@ -130,6 +282,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD_SUBMITTYRPI }}
 
     - name: Build and push submittyrpi/csci1200:default
+      if: needs.check-files-submittyrpi.outputs.csci1200__default == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submittyrpi/csci1200/default
@@ -137,6 +290,7 @@ jobs:
         tags: submittyrpi/csci1200:default
 
     - name: Build and push submittyrpi/csci2500:gdb
+      if: needs.check-files-submittyrpi.outputs.csci2500__gdb == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submittyrpi/csci2500/gdb
@@ -144,6 +298,7 @@ jobs:
         tags: submittyrpi/csci2500:gdb
 
     - name: Build and push submittyrpi/csci2500:spim
+      if: needs.check-files-submittyrpi.outputs.csci2500__spim == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submittyrpi/csci2500/spim
@@ -151,6 +306,7 @@ jobs:
         tags: submittyrpi/csci2500:spim
 
     - name: Build and push submittyrpi/csci2600:java_tools
+      if: needs.check-files-submittyrpi.outputs.csci2600__java_tools == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submittyrpi/csci2600/java_tools
@@ -158,6 +314,7 @@ jobs:
         tags: submittyrpi/csci2600:java_tools
 
     - name: Build and push submittyrpi/csci2600:java_tools_dafny
+      if: needs.check-files-submittyrpi.outputs.csci2600__java_tools_dafny == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submittyrpi/csci2600/java_tools_dafny
@@ -165,27 +322,31 @@ jobs:
         tags: submittyrpi/csci2600:java_tools_dafny
 
     - name: Build and push submittyrpi/csci4220:instructor_python
+      if: needs.check-files-submittyrpi.outputs.csci4220__instructor_python == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submittyrpi/csci4220/instructor_python
         push: true
         tags: submittyrpi/csci4220:instructor_python
 
-    - name: Build and push submittyrpi/csci4270:latest
-      uses: docker/build-push-action@releases/v3
-      with:
-        context: dockerfiles/submittyrpi/csci4270/20190912
-        push: true
-        tags: submittyrpi/csci4270:latest
-
     - name: Build and push submittyrpi/csci4270:20210121
+      if: needs.check-files-submittyrpi.outputs.csci4270__tag_20210121 == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submittyrpi/csci4270/20210121
         push: true
         tags: submittyrpi/csci4270:20210121
 
+    - name: Build and push submittyrpi/csci4270:latest
+      if: needs.check-files-submittyrpi.outputs.csci4270__latest == 'true'
+      uses: docker/build-push-action@releases/v3
+      with:
+        context: dockerfiles/submittyrpi/csci4270/20190912
+        push: true
+        tags: submittyrpi/csci4270:latest
+
     - name: Build and push submittyrpi/csci4380:latest
+      if: needs.check-files-submittyrpi.outputs.csci4380__latest == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submittyrpi/csci4380/latest
@@ -193,6 +354,7 @@ jobs:
         tags: submittyrpi/csci4380:latest
 
     - name: Build and push submittyrpi/csci4430:prolog_20191122
+      if: needs.check-files-submittyrpi.outputs.csci4430__prolog_20191122 == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submittyrpi/csci4430/prolog_20191122
@@ -200,6 +362,7 @@ jobs:
         tags: submittyrpi/csci4430:prolog_20191122
 
     - name: Build and push submittyrpi/csci4450:soot
+      if: needs.check-files-submittyrpi.outputs.csci4450__soot == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submittyrpi/csci4450/soot
@@ -207,6 +370,7 @@ jobs:
         tags: submittyrpi/csci4450:soot
 
     - name: Build and push submittyrpi/csci4510:combined
+      if: needs.check-files-submittyrpi.outputs.csci4510__combined == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submittyrpi/csci4510/combined
@@ -214,6 +378,7 @@ jobs:
         tags: submittyrpi/csci4510:combined
 
     - name: Build and push submittyrpi/csci4510:default
+      if: needs.check-files-submittyrpi.outputs.csci4510__default == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submittyrpi/csci4510/default
@@ -221,6 +386,7 @@ jobs:
         tags: submittyrpi/csci4510:default
 
     - name: Build and push submittyrpi/csci4510:go
+      if: needs.check-files-submittyrpi.outputs.csci4510__go == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submittyrpi/csci4510/go
@@ -228,6 +394,7 @@ jobs:
         tags: submittyrpi/csci4510:go
 
     - name: Build and push submittyrpi/csci4510:java-11
+      if: needs.check-files-submittyrpi.outputs.csci4510__java_11 == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submittyrpi/csci4510/java-11
@@ -235,6 +402,7 @@ jobs:
         tags: submittyrpi/csci4510:java-11
 
     - name: Build and push submittyrpi/csci4510:java-8
+      if: needs.check-files-submittyrpi.outputs.csci4510__java_8 == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submittyrpi/csci4510/java-8
@@ -242,6 +410,7 @@ jobs:
         tags: submittyrpi/csci4510:java-8
 
     - name: Build and push submittyrpi/csci4510:project2
+      if: needs.check-files-submittyrpi.outputs.csci4510__project2 == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submittyrpi/csci4510/project2
@@ -249,6 +418,7 @@ jobs:
         tags: submittyrpi/csci4510:project2
 
     - name: Build and push submittyrpi/csci4510:python-3.6
+      if: needs.check-files-submittyrpi.outputs.csci4510__python_3_6 == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submittyrpi/csci4510/python-3.6
@@ -256,6 +426,7 @@ jobs:
         tags: submittyrpi/csci4510:python-3.6
 
     - name: Build and push submittyrpi/csci4510:rust
+      if: needs.check-files-submittyrpi.outputs.csci4510__rust == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submittyrpi/csci4510/rust
@@ -263,6 +434,7 @@ jobs:
         tags: submittyrpi/csci4510:rust
 
     - name: Build and push submittyrpi/phil4140:aris
+      if: needs.check-files-submittyrpi.outputs.phil4140__aris == 'true'
       uses: docker/build-push-action@releases/v3
       with:
         context: dockerfiles/submittyrpi/phil4140/aris
