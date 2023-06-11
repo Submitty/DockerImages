@@ -1,0 +1,81 @@
+name: Docker Build and Push
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  generate-matrix:
+    runs-on: ubuntu-latest
+
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      run_docker_jobs: ${{ steps.set-run-docker-jobs.outputs.run_docker_jobs }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: ${{ github.event_name == 'pull_request' && 2 || 0 }}
+
+      - name: Get changed files
+        id: changed-files
+        run: |
+          echo "changed_files=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | xargs)" >> $GITHUB_OUTPUT
+
+      - name: Count number of files changed
+        id: set-run-docker-jobs
+        run: |
+          number_of_changed_files=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep '/Dockerfile$' | wc -l)
+          if [[ "$number_of_changed_files" -gt 0 ]]; then
+              echo "run_docker_jobs=true" >> $GITHUB_OUTPUT
+          else
+              echo "run_docker_jobs=false" >> $GITHUB_OUTPUT
+          fi
+
+        # added for debugging which files have changed
+      - name: List changed files
+        run: |
+          for file in ${{ steps.changed-files.outputs.changed_files }}; do
+              echo "$file was changed"
+          done
+
+      - name: Set Matrix
+        id: set-matrix
+        run: echo "matrix=$(bash ./bin/generate_matrix.sh ${{ github.event.before }} ${{ github.event.after }} | xargs )" >> $GITHUB_OUTPUT
+
+        # added for debugging which jobs will be run and what will be their name:tag and if docker workflow will run or not (true/false)
+      - name: List Matrix
+        run: |
+          echo ${{ steps.set-matrix.outputs.matrix }}
+          echo ${{ steps.set-run-docker-jobs.outputs.run_docker_jobs }}
+
+  docker:
+    needs:
+      - generate-matrix
+
+    if: needs.generate-matrix.outputs.run_docker_jobs == 'true'
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: true
+      matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v3
+
+      - name: Docker Hub login
+        uses: docker/login-action@releases/v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME_SUBMITTY }}
+          password: ${{ secrets.DOCKER_PASSWORD_SUBMITTY }}
+
+      - name: Build and push docker
+        uses: docker/build-push-action@v4
+        with:
+          context: ${{ matrix.context }}
+          push: true
+          tags: ${{ matrix.tags }}
