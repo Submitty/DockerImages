@@ -2,13 +2,11 @@
 
 set -e
 
-# # gives the path of the dockerfiles that have been modified/added in the last commit to main
+# gives the path of the dockerfiles that have been modified/added in the last commit to main
 changed_dockerfile_path=$(git diff --name-only $1 $2 | grep '/Dockerfile$')
 
 total_files=$(echo "${changed_dockerfile_path}" | wc -l)
 
-
-# json_file="D:\Development\docker-github-action\latest.json"
 json_file="./latest.json"
 
 # Read the JSON file into a variable
@@ -40,6 +38,7 @@ for file_path in ${changed_dockerfile_path}; do
                 break
             fi
         done
+        
         # removing the last Dockerfile from the file path
         updated_path=$(echo "$file_path" | sed 's/\/Dockerfile$//')
 
