@@ -1,3 +1,6 @@
+# to run this make sure you have docker installed for your python "pip3 install docker" also check permisiion for docker "sudo pip3 install docker" 
+# next just run "python3 test_images.py" 
+
 import os
 import docker
 from multiprocessing import Pool
