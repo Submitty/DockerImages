@@ -5,7 +5,7 @@ RUN wget https://www.php.net/distributions/php-7.4.33.tar.gz --no-check-certific
 RUN tar xzf php-7.4.33.tar.gz
 RUN cd php-7.4.33
 RUN apt-get update
-# RUN apt-get --assume-yes install gcc
+RUN apt-get --assume-yes install gcc
 RUN apt-get -y install expect
 RUN apt-get -y install pkg-config
 RUN apt-get --assume-yes install -y libsqlite3-dev
