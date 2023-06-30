@@ -1,4 +1,4 @@
-FROM debian:stretch-slim
+FROM debian:stable-slim
 
 RUN apt-get update \
     && apt-get -y --no-install-recommends install \
@@ -7,15 +7,15 @@ RUN apt-get update \
       libseccomp2 \
       procps \
     && rm -rf /var/lib/apt/lists/*
-RUN echo "deb http://ftp.debian.org/debian stretch-backports main" >> /etc/apt/sources.list \
+RUN echo "deb http://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list \
     && apt-get update \
     && apt-get -y --no-install-recommends install \
       clang-6.0 \
     && apt-get -y install cmake\
     && apt-get -y install make\
     && rm -rf /var/lib/apt/lists/* \
-    && ln -s /usr/bin/clang-6.0 /usr/bin/clang \
-    && ln -s /usr/bin/clang++-6.0 /usr/bin/clang++
+    && ln -sf /usr/bin/clang-6.0 /usr/bin/clang \
+    && ln -sf /usr/bin/clang++-6.0 /usr/bin/clang++
 RUN apt-get update \
     && apt-get install -y --no-install-recommends  g++ \
     && rm -rf /var/lib/apt/lists/*
