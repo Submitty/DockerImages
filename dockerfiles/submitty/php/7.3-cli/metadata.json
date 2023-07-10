@@ -1,9 +1,0 @@
-{
-  "components": [
-    "core",
-    "php/7.3/cli"
-  ],
-  "hostname": "submitty",
-  "name": "php",
-  "tag": "7.3-cli"
-}
