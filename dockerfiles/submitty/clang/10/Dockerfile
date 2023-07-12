@@ -1,5 +1,4 @@
-FROM ubuntu:18.04
-
+FROM debian:stable-slim
 # installing requirements to get and extract prebuilt binaries
 RUN apt-get update && apt-get install -y \
     xz-utils \

@@ -1,26 +1,20 @@
-FROM ubuntu:18.04
+FROM debian:stable-slim
 
-# Install "software-properties-common" (for the "add-apt-repository")
-RUN apt-get update && apt-get install -y \
-    software-properties-common
-# Add the "JAVA" ppa
-RUN add-apt-repository -y \
-    ppa:openjdk-r/ppa
-
-# Install OpenJDK-8
+# Install dependencies
 RUN apt-get update && \
-    apt-get install -y openjdk-11-jdk && \
-    apt-get install -y ant && \
-    apt-get clean;
+    apt-get install -y --no-install-recommends \
+    curl \
+    ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
 
-# Fix certificate issues
-RUN apt-get update && \
-    apt-get install ca-certificates-java && \
-    apt-get clean && \
-    update-ca-certificates -f \
-    rm -rf /var/lib/apt/lists/* && \
-    rm -rf /var/cache/oracle-jdk8-installer
+# Install OpenJDK 11 from AdoptOpenJDK
+RUN curl -L -o /adoptopenjdk.tar.gz https://github.com/AdoptOpenJDK/openjdk11-upstream-binaries/releases/download/jdk-11.0.12%2B7/OpenJDK11U-jdk_x64_linux_11.0.12_7.tar.gz && \
+    tar -xzf /adoptopenjdk.tar.gz -C /opt && \
+    rm /adoptopenjdk.tar.gz && \
+    ln -s /opt/jdk-11.0.12+7 /opt/openjdk11
 
-# Setup JAVA_HOME -- useful for docker commandline
-ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64/
-RUN export JAVA_HOME
+# Set environment variables
+ENV JAVA_HOME=/opt/openjdk11
+ENV PATH=$JAVA_HOME/bin:$PATH
+
+CMD ["/bin/bash"]

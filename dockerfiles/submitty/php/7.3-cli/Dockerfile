@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM debian:stable-slim
 RUN apt-get update && \
     apt-get install -y wget tar make
 RUN wget https://www.php.net/distributions/php-7.4.33.tar.gz --no-check-certificate && \

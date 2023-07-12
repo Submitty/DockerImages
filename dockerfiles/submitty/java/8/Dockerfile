@@ -1,5 +1,4 @@
-FROM ubuntu:18.04
-
+FROM debian:stable-slim
 # Install "software-properties-common" (for the "add-apt-repository")
 RUN apt-get update && apt-get install -y \
     software-properties-common
