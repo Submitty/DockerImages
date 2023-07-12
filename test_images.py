@@ -5,8 +5,9 @@ import os
 import docker
 from multiprocessing import Pool
 
-DOCKERFILES_DIRECTORY = "/home/crazypikachu/Desktop/development/DockerImages/dockerfiles/submitty/"  # Replace with the path to your directory containing Dockerfiles
+DOCKERFILES_DIRECTORY = ["./dockerfiles/submitty/","./dockerfiles/submittyrpi/"]  # Replace with the path to your directory containing Dockerfiles
 dockefile_ignore =[ "3.6","3.5","3.8","2.7","4.0","5.0","6.0","7","8","database_client"]
+
 def build_dockerfile(dockerfile):
     directory = os.path.dirname(dockerfile)
     image_tag = os.path.basename(directory)
@@ -37,8 +38,9 @@ def find_dockerfiles(directory):
 
 
 if __name__ == "__main__":
-    dockerfiles=find_dockerfiles(DOCKERFILES_DIRECTORY)
-    num_processes = min(len(dockerfiles), os.cpu_count())
+    for dockerfile_dir in DOCKERFILES_DIRECTORY:
+        dockerfiles=find_dockerfiles(dockerfile_dir)
+        num_processes = min(len(dockerfiles), os.cpu_count())
 
-    with Pool(processes=num_processes) as pool:
-        pool.map(build_dockerfile, dockerfiles)
+        with Pool(processes=num_processes) as pool:
+            pool.map(build_dockerfile, dockerfiles)
