@@ -1,0 +1,12 @@
+{
+    "latest": [
+        {
+            "docker_name":"clang",
+            "tag":"4.0"
+        },
+        {
+            "docker_name":"verilog",
+            "tag":"v3"
+        }
+    ]
+}
