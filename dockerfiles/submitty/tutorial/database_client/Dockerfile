@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim
+FROM ubuntu:22.04
 
 # ensure local python is preferred over distribution python
 ENV PATH /usr/local/bin:$PATH
