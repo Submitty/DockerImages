@@ -1,4 +1,4 @@
-FROM debian:stable-slim
+FROM ubuntu:22.04
 
 # Install dependencies
 RUN apt-get update && \

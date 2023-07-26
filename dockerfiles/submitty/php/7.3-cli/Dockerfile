@@ -1,4 +1,4 @@
-FROM debian:stable-slim
+FROM ubuntu:22.04
 RUN apt-get update && \
     apt-get install -y wget tar make
 RUN wget https://www.php.net/distributions/php-7.4.33.tar.gz --no-check-certificate && \
