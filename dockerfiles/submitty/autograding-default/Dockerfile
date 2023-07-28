@@ -4,13 +4,14 @@
 # any metadata.json file or is made up of components parts. Have to edit
 # this file directly.
 
-FROM ubuntu:18.04
+FROM ubuntu:20.04
+ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update
 RUN apt-get install -qqy python python-dev python3 python3-dev libpython3.5
 RUN apt-get install -qqy clang autoconf automake autotools-dev diffstat finger gdb git git-man \
 dpkg-dev p7zip-full patchutils \
-libpq-dev unzip valgrind zip libmagic-ocaml-dev common-lisp-controller \
+libpq-dev unzip valgrind zip libmagic-ocaml-dev \
 javascript-common  \
 libfile-mmagic-perl libgnupg-interface-perl libbsd-resource-perl libarchive-zip-perl gcc g++ \
 g++-multilib jq libseccomp-dev libseccomp2 seccomp junit flex bison spim poppler-utils
@@ -18,7 +19,8 @@ RUN apt-get install -qqy imagemagick
 
 ENV DRMEMORY_TAG release_2.5.0
 ENV DRMEMORY_VERSION 2.5.0
-ENV AnalysisTools_Version v.18.06.00
+ENV AnalysisTools_Version v.22.03.00
+ENV AnalysisToolsTS_Version v24.06.01
 ENV SUBMITTY_INSTALL_DIR /usr/local/submitty
 
 RUN apt-get update \
@@ -35,6 +37,10 @@ RUN apt-get update \
     && wget -nv "https://github.com/Submitty/AnalysisTools/releases/download/${AnalysisTools_Version}/count" -O ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisTools/count \
     && wget -nv "https://github.com/Submitty/AnalysisTools/releases/download/${AnalysisTools_Version}/plagiarism" -O ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisTools/plagiarism \
     && wget -nv "https://github.com/Submitty/AnalysisTools/releases/download/${AnalysisTools_Version}/diagnostics" -O ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisTools/diagnostics \
+    && mkdir -p ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisToolsTS/build \
+    && wget -nv "https://github.com/Submitty/AnalysisToolsTS/releases/download/${AnalysisToolsTS_Version}/submitty_count_ts" -O ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisToolsTS/build/submitty_count_ts \
+    && wget -nv "https://github.com/Submitty/AnalysisToolsTS/releases/download/${AnalysisToolsTS_Version}/submitty_diagnostics_ts" -O ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisToolsTS/build/submitty_diagnostics_ts \
+    && chmod -R 755 ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisToolsTS \
     && apt-get purge -y --auto-remove wget \
     && rm -rf /var/lib/apt/lists/*
 
