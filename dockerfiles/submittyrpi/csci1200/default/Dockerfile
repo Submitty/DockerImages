@@ -21,8 +21,8 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 
-ENV DRMEMORY_TAG release_2.3.0
-ENV DRMEMORY_VERSION 2.3.0-1
+ENV DRMEMORY_TAG release_2.5.0
+ENV DRMEMORY_VERSION 2.5.0
 ENV SUBMITTY_INSTALL_DIR /usr/local/submitty
 
 RUN apt-get update \
@@ -46,6 +46,17 @@ RUN apt-get update \
     && apt-get install -y imagemagick \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update \
+    && apt-get install -y wkhtmltopdf \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update \
+    && apt-get install -y xvfb \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update \
+    && apt-get install -y time \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV AnalysisTools_Version v.18.06.00
 ENV SUBMITTY_INSTALL_DIR /usr/local/submitty
@@ -60,4 +71,16 @@ RUN apt-get update \
     && apt-get purge -y --auto-remove wget \
     && rm -rf /var/lib/apt/lists/*
 
+
+ENV AnalysisToolsTS_Version v23.06.01
+ENV SUBMITTY_INSTALL_DIR /usr/local/submitty
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends wget \
+    && mkdir -p ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisToolsTS/build \
+    && wget -nv "https://github.com/Submitty/AnalysisToolsTS/releases/download/${AnalysisToolsTS_Version}/submitty_count_ts" -O ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisToolsTS/build/submitty_count_ts \
+    && wget -nv "https://github.com/Submitty/AnalysisToolsTS/releases/download/${AnalysisToolsTS_Version}/submitty_diagnostics_ts" -O ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisToolsTS/build/submitty_diagnostics_ts \
+    && chmod -R 755 ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisToolsTS \
+    && apt-get purge -y --auto-remove wget \
+    && rm -rf /var/lib/apt/lists/*
 CMD ["/bin/bash"]

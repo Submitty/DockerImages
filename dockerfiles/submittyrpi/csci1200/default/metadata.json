@@ -9,6 +9,8 @@
     "drmemory",
     "valgrind",
     "imagemagick",
-    "analysis_tools"
+    "wkhtmltopdf",  
+    "analysis_tools",
+    "analysis_tools_ts"
   ]
 }
