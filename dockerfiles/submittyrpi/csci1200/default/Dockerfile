@@ -1,4 +1,4 @@
-FROM debian:stretch-slim
+FROM debian:buster-slim
 
 RUN apt-get update \
     && apt-get -y --no-install-recommends install \
@@ -7,7 +7,7 @@ RUN apt-get update \
       libseccomp2 \
       procps \
     && rm -rf /var/lib/apt/lists/*
-RUN echo "deb http://ftp.debian.org/debian stretch-backports main" >> /etc/apt/sources.list \
+RUN echo "deb http://ftp.debian.org/debian buster-backports main" >> /etc/apt/sources.list \
     && apt-get update \
     && apt-get -y --no-install-recommends install \
       clang-6.0 \
@@ -71,4 +71,16 @@ RUN apt-get update \
     && apt-get purge -y --auto-remove wget \
     && rm -rf /var/lib/apt/lists/*
 
+
+ENV AnalysisToolsTS_Version v23.06.01
+ENV SUBMITTY_INSTALL_DIR /usr/local/submitty
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends wget \
+    && mkdir -p ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisToolsTS/build \
+    && wget -nv "https://github.com/Submitty/AnalysisToolsTS/releases/download/${AnalysisToolsTS_Version}/submitty_count_ts" -O ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisToolsTS/build/submitty_count_ts \
+    && wget -nv "https://github.com/Submitty/AnalysisToolsTS/releases/download/${AnalysisToolsTS_Version}/submitty_diagnostics_ts" -O ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisToolsTS/build/submitty_diagnostics_ts \
+    && chmod -R 755 ${SUBMITTY_INSTALL_DIR}/SubmittyAnalysisToolsTS \
+    && apt-get purge -y --auto-remove wget \
+    && rm -rf /var/lib/apt/lists/*
 CMD ["/bin/bash"]
