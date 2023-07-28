@@ -72,7 +72,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 
-ENV AnalysisToolsTS_Version v22.08.02
+ENV AnalysisToolsTS_Version v23.06.01
 ENV SUBMITTY_INSTALL_DIR /usr/local/submitty
 
 RUN apt-get update \
