@@ -58,7 +58,7 @@ RUN apt-get update \
     && apt-get install -y time \
     && rm -rf /var/lib/apt/lists/*
 
-ENV AnalysisTools_Version v.18.06.00
+ENV AnalysisTools_Version v22.03.00
 ENV SUBMITTY_INSTALL_DIR /usr/local/submitty
 
 RUN apt-get update \
