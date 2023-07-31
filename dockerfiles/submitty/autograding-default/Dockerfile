@@ -14,7 +14,7 @@ dpkg-dev p7zip-full patchutils \
 libpq-dev unzip valgrind zip libmagic-ocaml-dev \
 javascript-common  \
 libfile-mmagic-perl libgnupg-interface-perl libbsd-resource-perl libarchive-zip-perl gcc g++ \
-g++-multilib jq libseccomp-dev libseccomp2 seccomp junit flex bison spim poppler-utils
+jq libseccomp-dev libseccomp2 seccomp junit flex bison spim poppler-utils
 RUN apt-get install -qqy imagemagick
 
 ENV DRMEMORY_TAG release_2.5.0
