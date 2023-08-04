@@ -15,6 +15,10 @@
         {
             "docker_name":"python",
             "tag":"3.7"
+        },
+        {
+            "docker_name":"verilog",
+            "tag":"latest"
         }
         
     ]
