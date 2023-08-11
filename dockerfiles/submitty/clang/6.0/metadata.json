@@ -1,9 +1,0 @@
-{
-  "hostname": "submitty",
-  "name": "clang",
-  "tag": "6.0",
-  "components": [
-    "core",
-    "clang/6.0"
-  ]
-}

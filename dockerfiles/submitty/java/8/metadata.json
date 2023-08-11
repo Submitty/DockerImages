@@ -1,9 +1,0 @@
-{
-  "hostname": "submitty",
-  "name": "java",
-  "tag": "8",
-  "components": [
-    "core",
-    "java/openjdk/8"
-  ]
-}

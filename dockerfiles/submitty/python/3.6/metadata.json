@@ -1,9 +1,0 @@
-{
-  "hostname": "submitty",
-  "name": "python",
-  "tag": "3.6",
-  "components": [
-    "core",
-    "python/3.6"
-  ]
-}
