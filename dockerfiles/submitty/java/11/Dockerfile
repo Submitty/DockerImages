@@ -15,6 +15,7 @@ RUN curl -L -o /adoptopenjdk.tar.gz https://github.com/AdoptOpenJDK/openjdk11-up
 
 # Set environment variables
 ENV JAVA_HOME=/opt/openjdk11
+
 ENV PATH=$JAVA_HOME/bin:$PATH
 
 CMD ["/bin/bash"]

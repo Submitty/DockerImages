@@ -1,7 +1,9 @@
 FROM ubuntu:22.04
+
 # Install "software-properties-common" (for the "add-apt-repository")
 RUN apt-get update && apt-get install -y \
     software-properties-common
+    
 # Add the "JAVA" ppa
 RUN add-apt-repository -y \
     ppa:openjdk-r/ppa
