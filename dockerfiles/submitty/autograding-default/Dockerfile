@@ -19,8 +19,8 @@ RUN apt-get install -qqy imagemagick
 
 ENV DRMEMORY_TAG release_2.5.0
 ENV DRMEMORY_VERSION 2.5.0
-ENV AnalysisTools_Version v.22.03.00
-ENV AnalysisToolsTS_Version v24.06.01
+ENV AnalysisTools_Version v22.03.00
+ENV AnalysisToolsTS_Version v23.06.01
 ENV SUBMITTY_INSTALL_DIR /usr/local/submitty
 
 RUN apt-get update \
