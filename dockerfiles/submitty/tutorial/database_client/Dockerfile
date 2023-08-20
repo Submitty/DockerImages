@@ -199,6 +199,9 @@ RUN set -eux; \
 	pip --version
 
 # Install additional packages via pip
+RUN ln -s /usr/local/bin/python3 /usr/bin/python3 \
+	&& ln -s /usr/local/bin/pip3 /usr/bin/pip3
+	
 RUN pip3 install psycopg2-binary lxml
 
 CMD ["/bin/bash"]
