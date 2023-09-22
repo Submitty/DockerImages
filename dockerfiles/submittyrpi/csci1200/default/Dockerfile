@@ -23,8 +23,8 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 
-ENV DRMEMORY_TAG release_2.5.0
-ENV DRMEMORY_VERSION 2.5.0
+ENV DRMEMORY_TAG release_2.6.0
+ENV DRMEMORY_VERSION 2.6.0
 ENV SUBMITTY_INSTALL_DIR /usr/local/submitty
 
 RUN apt-get update \
