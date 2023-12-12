@@ -9,7 +9,7 @@ RUN apt-get update \
       && rm -rf "/var/lib/apt/lists/*"
 
 RUN apt-get update \
-    && apt-get install -y iverilog gtkwave \
-    && rm -rf "/var/lib/apt/lists/*"
+      && apt-get install -y iverilog gtkwave \
+      && rm -rf "/var/lib/apt/lists/*"
 
 CMD ["/bin/bash"]
