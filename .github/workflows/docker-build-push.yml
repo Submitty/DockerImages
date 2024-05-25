@@ -78,6 +78,9 @@ jobs:
           context: ${{ matrix.context }}
           push: true
           tags: submitty/${{ matrix.dockername }}:${{ matrix.tag }}
+          platforms:
+            - linux/arm64
+            - linux/amd64
   docker-latest:
     needs:
       - generate-matrix
@@ -100,3 +103,6 @@ jobs:
           context: ${{ matrix.context }}
           push: true
           tags: submitty/${{ matrix.dockername }}:latest
+          platforms:
+            - linux/arm64
+            - linux/amd64
