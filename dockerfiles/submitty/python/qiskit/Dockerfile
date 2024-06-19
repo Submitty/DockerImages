@@ -6,4 +6,4 @@ RUN apt-get install python3.10 pip -y
 
 RUN pip install --upgrade pip==22.0.2
 
-RUN pip install qiskit==1.0.2 qiskit-ibm-runtime==0.22.0
+RUN pip install qiskit[all]==1.0.2 qiskit-ibm-runtime==0.22.0
