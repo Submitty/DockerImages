@@ -7,9 +7,9 @@ on:
 
 jobs:
   call-docker-build-push:
-    uses: submitty/action-docker-build/.github/workflows/docker-build-push.yml@v24.06.00
+    uses: submitty/action-docker-build/.github/workflows/docker-build-push.yml@v24.07.00
     with:
       push: false
-      docker_username: ${{ vars.docker_username }}
+      docker_org_name: ${{ vars.docker_org_name }}
       base_commit: ${{ github.event.pull_request.base.sha }}
       head_commit: ${{ github.event.pull_request.head.sha }}
