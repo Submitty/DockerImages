@@ -1,4 +1,4 @@
 {
     "pushLatest": true,
-    "latestImage": "ubuntu-20.04"
+    "latestTag": "ubuntu-20.04"
 }
