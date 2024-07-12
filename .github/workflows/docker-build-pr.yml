@@ -1,17 +1,15 @@
 name: Docker Build and Push
 
 on:
-  push:
+  pull_request:
     branches:
-      - "main"
+      - main
 
 jobs:
   call-docker-build-push:
     uses: submitty/action-docker-build/.github/workflows/docker-build-push.yml@v24.06.00
     with:
-      push: true
+      push: false
       docker_username: ${{ vars.docker_username }}
-      base_commit: ${{ github.event.before }}
-      head_commit: ${{ github.event.after }}
-    secrets:
-      docker_password: ${{ secrets.docker_password }}
+      base_commit: ${{ github.event.pull_request.base.sha }}
+      head_commit: ${{ github.event.pull_request.head.sha }}

@@ -23,6 +23,9 @@ ENV AnalysisTools_Version v22.03.00
 ENV AnalysisToolsTS_Version v23.06.01
 ENV SUBMITTY_INSTALL_DIR /usr/local/submitty
 
+
+
+
 RUN apt-get update \
     && apt-get install -y --no-install-recommends wget ca-certificates rsync \
     && mkdir -p ${SUBMITTY_INSTALL_DIR}/drmemory \
