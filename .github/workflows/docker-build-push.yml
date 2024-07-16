@@ -6,97 +6,13 @@ on:
       - "main"
 
 jobs:
-  generate-matrix:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-      run_docker_jobs: ${{ steps.set-run-docker-jobs.outputs.run_docker_jobs }}
-      run_latest_docker_jobs: ${{ steps.set-run-docker-jobs.outputs.run_latest_docker_jobs }}
-      latest-matrix: ${{ steps.set-matrix.outputs.latest-matrix }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: ${{ github.event_name == 'pull_request' && 2 || 0 }}
-      - name: Get changed files
-        id: changed-files
-        run: |
-          echo "changed_files=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | xargs)" >> $GITHUB_OUTPUT
-      - name: Count number of files changed
-        id: set-run-docker-jobs
-        run: |
-          number_of_changed_files=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep -E '^.*\/submitty\/[^/]+\/[^/]+\/Dockerfile$' | wc -l)
-          echo $number_of_changed_files
-          if [[ "$number_of_changed_files" -gt 0 ]]; then
-            echo "run_docker_jobs=true" >> $GITHUB_OUTPUT
-          else
-            echo "run_docker_jobs=false" >> $GITHUB_OUTPUT
-          fi
-
-          number_of_changed_latest_files=$(bash ./bin/check_docker_latest_run.sh ${{ github.event.before }} ${{ github.event.after }} | xargs )
-          echo $number_of_changed_latest_files
-          if [[ "$number_of_changed_latest_files" -gt 0 ]]; then
-            echo "run_latest_docker_jobs=true" >> $GITHUB_OUTPUT
-          else
-            echo "run_latest_docker_jobs=false" >> $GITHUB_OUTPUT
-          fi
-      - name: List changed files
-        run: |
-          for file in ${{ steps.changed-files.outputs.changed_files }}; do
-              echo "$file was changed"
-          done
-      - name: Set Matrix
-        id: set-matrix
-        run: |
-          echo "matrix=$(bash ./bin/generate_matrix.sh ${{ github.event.before }} ${{ github.event.after }} | xargs )" >> $GITHUB_OUTPUT
-          echo "latest-matrix=$(bash ./bin/generate_latest_matrix.sh ${{ github.event.before }} ${{ github.event.after }} | xargs )" >> $GITHUB_OUTPUT
-      - name: List Matrix
-        run: |
-          echo ${{ steps.set-matrix.outputs.matrix }}
-          echo ${{ steps.set-run-docker-jobs.outputs.run_docker_jobs }}
-          echo ${{ steps.set-matrix.outputs.latest-matrix }}
-          echo ${{ steps.set-run-docker-jobs.outputs.run_latest_docker_jobs }}
-  docker:
-    needs:
-      - generate-matrix
-    if: needs.generate-matrix.outputs.run_docker_jobs == 'true'
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-      matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
-    steps:
-      - name: Check out repo
-        uses: actions/checkout@v3
-      - name: Docker Hub login
-        uses: docker/login-action@releases/v1
-        with:
-          username: ${{ secrets.DOCKER_USERNAME_SUBMITTY }}
-          password: ${{ secrets.DOCKER_PASSWORD_SUBMITTY }}
-      - name: Build and push docker
-        uses: docker/build-push-action@v4
-        with:
-          context: ${{ matrix.context }}
-          push: true
-          tags: submitty/${{ matrix.dockername }}:${{ matrix.tag }}
-  docker-latest:
-    needs:
-      - generate-matrix
-    if: needs.generate-matrix.outputs.run_latest_docker_jobs == 'true'
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-      matrix: ${{ fromJson(needs.generate-matrix.outputs.latest-matrix) }}
-    steps:
-      - name: Check out repo
-        uses: actions/checkout@v3
-      - name: Docker Hub login
-        uses: docker/login-action@releases/v1
-        with:
-          username: ${{ secrets.DOCKER_USERNAME_SUBMITTY }}
-          password: ${{ secrets.DOCKER_PASSWORD_SUBMITTY }}
-      - name: Build and push docker
-        uses: docker/build-push-action@v4
-        with:
-          context: ${{ matrix.context }}
-          push: true
-          tags: submitty/${{ matrix.dockername }}:latest
+  call-docker-build-push:
+    uses: submitty/action-docker-build/.github/workflows/docker-build-push.yml@v24.07.00
+    with:
+      push: true
+      docker_org_name: ${{ vars.docker_org_name }}
+      base_commit: ${{ github.event.before }}
+      head_commit: ${{ github.event.after }}
+    secrets:
+      docker_username: ${{ secrets.docker_username }}
+      docker_password: ${{ secrets.docker_password }}
