@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim
+FROM ubuntu:22.04
 
 # Install necessary packages for SWI-Prolog
 RUN apt-get update \
