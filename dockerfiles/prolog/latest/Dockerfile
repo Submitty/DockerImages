@@ -8,11 +8,7 @@ RUN apt-get update \
     libgmp-dev \
     libssl-dev \
     zlib1g-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install SWI-Prolog
-RUN apt-get update \
-    && apt-get install -y swi-prolog \
+    swi-prolog \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src/app
