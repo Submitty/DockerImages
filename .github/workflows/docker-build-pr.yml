@@ -10,6 +10,6 @@ jobs:
     uses: submitty/action-docker-build/.github/workflows/docker-build-push.yml@v24.07.00
     with:
       push: false
-      docker_org_name: ${{ vars.docker_org_name }}
+      docker_org_name: submitty
       base_commit: ${{ github.event.pull_request.base.sha }}
       head_commit: ${{ github.event.pull_request.head.sha }}
