@@ -25,13 +25,14 @@ ENV SALSAOPTS=""
 # RUN echo "java -cp $SALSA_COMPILER_JAR:. $SALSAOPTS wwc.messaging.Theater" > 'wwctheater'
 # RUN chmod +x salsac && chmod +x salsa && chmod +x wwcns && chmod +x wwctheater
 
-RUN echo "alias salsac='java -cp $SALSA_COMPILER_JAR:. salsac.SalsaCompiler \!*.salsa; javac -classpath $SALSA_COMPILER_JAR:. \!*.java'\n\
-    alias salsa='java -cp $SALSA_COMPILER_JAR:. $SALSAOPTS' \n\
-    alias wwcns='java -cp $SALSA_COMPILER_JAR:. wwc.naming.WWCNamingServer' \n\
-    alias wwctheater='java -cp $SALSA_COMPILER_JAR:. $SALSAOPTS wwc.messaging.Theater'" \
+RUN echo "alias salsac=\"java -cp $SALSA_COMPILER_JAR:. salsac.SalsaCompiler \!*.salsa; javac -classpath $SALSA_COMPILER_JAR:. \!*.java\"\n\
+    alias salsa=\"java -cp $SALSA_COMPILER_JAR:. $SALSAOPTS\" \n\
+    alias wwcns=\"java -cp $SALSA_COMPILER_JAR:. wwc.naming.WWCNamingServer\" \n\
+    alias wwctheater=\"java -cp $SALSA_COMPILER_JAR:. $SALSAOPTS wwc.messaging.Theater\"" \
     > /usr/src/app/.bashrc
 
 RUN source /usr/src/app/.bashrc
 
 # start the container from bash
-CMD ["/bin/bash"]
+CMD ["/bin/bash", "-c", "source /usr/src/app/.bashrc && exec /bin/bash"]
+
