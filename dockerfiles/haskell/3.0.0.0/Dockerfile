@@ -3,9 +3,6 @@ FROM ubuntu:22.04
 # Install necessary packages for GHC (compiler)
 RUN apt-get update \
     && apt-get -y --no-install-recommends install \
-    build-essential \
-    curl \
-    libgmp-dev \
     ghc cabal-install \
     && rm -rf /var/lib/apt/lists/*
     
