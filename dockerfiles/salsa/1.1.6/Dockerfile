@@ -18,21 +18,14 @@ RUN curl -SL -o /usr/local/lib/salsa/salsa1.1.6.jar http://wcl.cs.rpi.edu/salsa/
 ENV SALSA_COMPILER_JAR=/usr/local/lib/salsa/salsa1.1.6.jar
 ENV SALSAOPTS=""
 
-# Create aliases
-# RUN echo "java -cp $SALSA_COMPILER_JAR:. salsac.SalsaCompiler \!*.salsa; javac -classpath $SALSA_COMPILER_JAR:. \!*.java" > 'salsac'
-# RUN echo "java -cp $SALSA_COMPILER_JAR:. $SALSAOPTS" > 'salsa'
-# RUN echo "java -cp $SALSA_COMPILER_JAR:. wwc.naming.WWCNamingServer" > 'wwcns'
-# RUN echo "java -cp $SALSA_COMPILER_JAR:. $SALSAOPTS wwc.messaging.Theater" > 'wwctheater'
-# RUN chmod +x salsac && chmod +x salsa && chmod +x wwcns && chmod +x wwctheater
+# Write aliases to a separate file
+RUN echo "alias salsac='java -cp $SALSA_COMPILER_JAR:. salsac.SalsaCompiler !*.salsa; javac -classpath $SALSA_COMPILER_JAR:. !*.java'" >> /usr/src/app/salsa_aliases.sh && \
+    echo "alias salsa='java -cp $SALSA_COMPILER_JAR:. $SALSAOPTS'" >> /usr/src/app/salsa_aliases.sh && \
+    echo "alias wwcns='java -cp $SALSA_COMPILER_JAR:. wwc.naming.WWCNamingServer'" >> /usr/src/app/salsa_aliases.sh && \
+    echo "alias wwctheater='java -cp $SALSA_COMPILER_JAR:. $SALSAOPTS wwc.messaging.Theater'" >> /usr/src/app/salsa_aliases.sh
 
-RUN echo "alias salsac=\"java -cp $SALSA_COMPILER_JAR:. salsac.SalsaCompiler \!*.salsa; javac -classpath $SALSA_COMPILER_JAR:. \!*.java\"\n\
-    alias salsa=\"java -cp $SALSA_COMPILER_JAR:. $SALSAOPTS\" \n\
-    alias wwcns=\"java -cp $SALSA_COMPILER_JAR:. wwc.naming.WWCNamingServer\" \n\
-    alias wwctheater=\"java -cp $SALSA_COMPILER_JAR:. $SALSAOPTS wwc.messaging.Theater\"" \
-    > /usr/src/app/.bashrc
+# make sure the aliases script gets sourced on container start
+RUN echo "source /usr/src/app/salsa_aliases.sh" >> /etc/bash.bashrc
 
-RUN source /usr/src/app/.bashrc
-
-# start the container from bash
-CMD ["/bin/bash", "-c", "source /usr/src/app/.bashrc && exec /bin/bash"]
-
+# Start the container in bash
+CMD ["bash"]
