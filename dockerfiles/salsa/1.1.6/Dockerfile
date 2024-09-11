@@ -19,7 +19,7 @@ ENV SALSA_COMPILER_JAR=/usr/local/lib/salsa/salsa1.1.6.jar
 ENV SALSAOPTS=""
 
 # Write aliases to a separate file
-RUN echo "alias salsac='java -cp $SALSA_COMPILER_JAR:. salsac.SalsaCompiler !*.salsa; javac -classpath $SALSA_COMPILER_JAR:. !*.java'" >> /usr/src/app/salsa_aliases.sh && \
+RUN echo "alias salsac='java -cp $SALSA_COMPILER_JAR:. salsac.SalsaCompiler *.salsa; javac -classpath $SALSA_COMPILER_JAR:. *.java'" >> /usr/src/app/salsa_aliases.sh && \
     echo "alias salsa='java -cp $SALSA_COMPILER_JAR:. $SALSAOPTS'" >> /usr/src/app/salsa_aliases.sh && \
     echo "alias wwcns='java -cp $SALSA_COMPILER_JAR:. wwc.naming.WWCNamingServer'" >> /usr/src/app/salsa_aliases.sh && \
     echo "alias wwctheater='java -cp $SALSA_COMPILER_JAR:. $SALSAOPTS wwc.messaging.Theater'" >> /usr/src/app/salsa_aliases.sh
@@ -27,5 +27,4 @@ RUN echo "alias salsac='java -cp $SALSA_COMPILER_JAR:. salsac.SalsaCompiler !*.s
 # make sure the aliases script gets sourced on container start
 RUN echo "source /usr/src/app/salsa_aliases.sh" >> /etc/bash.bashrc
 
-# Start the container in bash
 CMD ["bash"]
