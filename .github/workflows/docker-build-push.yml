@@ -7,7 +7,7 @@ on:
 
 jobs:
   call-docker-build-push:
-    uses: submitty/action-docker-build/.github/workflows/docker-build-push.yml@v24.07.00
+    uses: submitty/action-docker-build/.github/workflows/docker-build-push.yml@v24.09.00
     with:
       push: true
       docker_org_name: submitty
