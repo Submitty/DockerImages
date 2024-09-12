@@ -19,6 +19,13 @@ RUN ghcup install ghc 8.8.4 \
     && ghcup install cabal \
     && cabal update
 
+# Clean up unnecessary packages
+RUN apt-get remove -y --purge \
+    curl pkg-config ca-certificates libtinfo5 pkg-config\
+    && apt-get autoremove -y \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /usr/src/app
 
 CMD ["/bin/bash"]
