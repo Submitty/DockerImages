@@ -3,9 +3,8 @@ FROM ubuntu:22.04
 # Install necessary dependencies
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-    apt-utils curl build-essential libffi-dev libffi8 libgmp10 \
-    libgmp-dev libncurses-dev libncurses5 libtinfo5 pkg-config \
-    ca-certificates \
+    curl build-essential libffi-dev libffi8 libgmp10 \
+    libgmp-dev libtinfo5 pkg-config ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 # Install GHCup (Haskell toolchain manager)
