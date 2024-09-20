@@ -1,6 +1,7 @@
 FROM ubuntu:22.04
 
-# Set the environment variables
+
+WORKDIR /usr/src/app
 ENV LANG C.UTF-8
 
 # Install necessary build dependencies
