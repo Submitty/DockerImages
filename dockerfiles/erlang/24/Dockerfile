@@ -1,28 +1,39 @@
+# Use the base image
 FROM ubuntu:22.04
 
 WORKDIR /usr/src/app
 ENV LANG=C.UTF-8
-
-# Set up the environment to be non-interactive for apt
 ENV DEBIAN_FRONTEND=noninteractive
+ENV KERL_BASE_DIR=/usr/local/kerl
 
-# Install dependencies
+# Install dependencies for Erlang and the build process
 RUN set -eux; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
-    libncurses5 libsctp1 \
-    ca-certificates wget; \
+    build-essential \
+    libncurses5-dev libsctp1 \
+    ca-certificates wget curl git \
+    autoconf m4 libssl-dev libwxgtk3.0-gtk3-dev libgl1-mesa-dev \
+    libglu1-mesa-dev libpng-dev libssh-dev unixodbc-dev xsltproc fop \
+    locales; \
     rm -rf /var/lib/apt/lists/*
 
-# Detect the architecture at runtime and download the correct Erlang package
-RUN ARCH=$(dpkg --print-architecture) && \
-    case "$ARCH" in \
-    "amd64") \
-        wget -O erlang.deb https://binaries2.erlang-solutions.com/ubuntu/pool/contrib/e/esl-erlang/esl-erlang_26.0-1~ubuntu~jammy_amd64.deb ;; \
-    "arm64") \
-        wget -O erlang.deb https://binaries2.erlang-solutions.com/ubuntu/pool/contrib/e/esl-erlang/esl-erlang_26.0-1~ubuntu~jammy_arm64.deb ;; \
-    *) echo "Unsupported architecture: $ARCH" && exit 1 ;; \
-    esac && dpkg -i erlang.deb && rm erlang.deb
+# Install kerl to manage Erlang builds
+RUN curl -O https://raw.githubusercontent.com/kerl/kerl/master/kerl && \
+    chmod +x kerl && \
+    mv kerl /usr/local/bin/kerl
+
+# Update kerl releases and build Erlang 26.0
+RUN kerl update releases
+RUN MAKEFLAGS=-j6 kerl build 26.0 26.0_build
+RUN kerl install 26.0_build /usr/local/erlang/26.0
+
+# Cleanup the build files
+RUN rm -rf /usr/local/kerl/builds/26.0_build
+
+# Activate the Erlang environment by default
+RUN echo ". /usr/local/erlang/26.0/activate" >> /root/.bashrc && \
+    echo ". /usr/local/erlang/26.0/activate" >> /etc/profile
 
 # Default command
 CMD ["/bin/bash"]
