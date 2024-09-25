@@ -10,9 +10,13 @@ RUN apt-get update \
 WORKDIR /usr/src/app
 
 RUN mkdir -p /usr/local/lib/salsa
+ENV SALSA_JAR_SHA256=821fe5ec2922ff32f09fa55280afd023aa9852c7cc074f90cd086a4691e327af
 
 # Download the Salsa compiler jar file
-RUN curl -SL -o /usr/local/lib/salsa/salsa1.1.6.jar http://wcl.cs.rpi.edu/salsa/releases/salsa1.1.6.jar
+RUN curl -SL -o /usr/local/lib/salsa/salsa1.1.6.jar http://wcl.cs.rpi.edu/salsa/releases/salsa1.1.6.jar \
+    && echo "$SALSA_JAR_SHA256  /usr/local/lib/salsa/salsa1.1.6.jar" | sha256sum -c -
+
+RUN apt-get remove curl -y && apt autoremove -y && apt clean -y
 
 # Set environment variable for the Salsa compiler jar location
 ENV SALSA_COMPILER_JAR=/usr/local/lib/salsa/salsa1.1.6.jar
