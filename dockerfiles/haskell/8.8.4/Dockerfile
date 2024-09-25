@@ -1,5 +1,5 @@
 # First Stage: Builder
-FROM debian:buster-slim AS builder
+FROM ubuntu:22.04 AS builder
 
 # Install necessary dependencies for building GHC
 RUN apt-get update \
@@ -18,12 +18,12 @@ RUN rm -rf /root/.ghcup/cache /var/lib/apt/lists/*
 
 
 # Second Stage: Final Image
-FROM debian:buster-slim
+FROM ubuntu:22.04
 
 # Install runtime dependencies
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-    libffi6 libgmp10 libtinfo5 build-essential \
+    libgmp10 libtinfo5 build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy GHC from the builder stage
