@@ -14,10 +14,15 @@ RUN set -eux; \
     ca-certificates wget; \
     rm -rf /var/lib/apt/lists/*
 
-# Download and install Erlang
-RUN wget -O erlang.deb https://binaries2.erlang-solutions.com/ubuntu/pool/contrib/e/esl-erlang/esl-erlang_26.0-1~ubuntu~jammy_amd64.deb \
-    && dpkg -i erlang.deb \
-    && rm erlang.deb
+# Detect the architecture at runtime and download the correct Erlang package
+RUN ARCH=$(dpkg --print-architecture) && \
+    case "$ARCH" in \
+    "amd64") \
+        wget -O erlang.deb https://binaries2.erlang-solutions.com/ubuntu/pool/contrib/e/esl-erlang/esl-erlang_26.0-1~ubuntu~jammy_amd64.deb ;; \
+    "arm64") \
+        wget -O erlang.deb https://binaries2.erlang-solutions.com/ubuntu/pool/contrib/e/esl-erlang/esl-erlang_26.0-1~ubuntu~jammy_arm64.deb ;; \
+    *) echo "Unsupported architecture: $ARCH" && exit 1 ;; \
+    esac && dpkg -i erlang.deb && rm erlang.deb
 
 # Default command
 CMD ["/bin/bash"]
