@@ -1,51 +1,23 @@
 FROM ubuntu:22.04
 
-
 WORKDIR /usr/src/app
-ENV LANG C.UTF-8
+ENV LANG=C.UTF-8
 
-# Install necessary build dependencies
+# Set up the environment to be non-interactive for apt
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install dependencies
 RUN set -eux; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
-        ca-certificates \
-        wget \
-        gcc \
-        make \
-        autoconf \
-        libssl-dev \
-        libncurses5-dev \
-        libwxgtk3.0-gtk3-dev \
-        libgl1-mesa-dev \
-        libglu1-mesa-dev \
-        libpng-dev \
-        libssh-dev \
-        unixodbc-dev \
-        xsltproc \
-        fop \
-        git \
-    ; \
+    libncurses5 libsctp1 \
+    ca-certificates wget; \
     rm -rf /var/lib/apt/lists/*
 
-# Set Erlang version and URL for the tarball
-ENV ERLANG_VERSION OTP-26.0
-ENV ERLANG_DOWNLOAD_URL https://api.github.com/repos/erlang/otp/tarball/refs/tags/$ERLANG_VERSION
+# Download and install Erlang
+RUN wget -O erlang.deb https://binaries2.erlang-solutions.com/ubuntu/pool/contrib/e/esl-erlang/esl-erlang_26.0-1~ubuntu~jammy_amd64.deb \
+    && dpkg -i erlang.deb \
+    && rm erlang.deb
 
-# Download and install Erlang/OTP from source
-RUN set -eux; \
-    wget -O erlang.tar.gz $ERLANG_DOWNLOAD_URL; \
-    mkdir -p /usr/src/erlang; \
-    tar -xzf erlang.tar.gz --strip-components=1 -C /usr/src/erlang; \
-    rm erlang.tar.gz; \
-    cd /usr/src/erlang; \
-    ./otp_build autoconf; \
-    ./configure --without-javac; \
-    make -j$(nproc); \
-    make install; \
-    cd /; \
-    rm -rf /usr/src/erlang
-
-# Verify Erlang installation
-RUN erl -version
-
+# Default command
 CMD ["/bin/bash"]
