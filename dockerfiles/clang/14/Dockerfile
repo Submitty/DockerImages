@@ -1,6 +1,6 @@
 FROM ubuntu:22.04
 
-# installing requirements to get and extract prebuilt binaries
+# installing clang & clang++
 RUN apt-get update
 RUN apt-get install -y clang-14 lld-14
 RUN rm -rf /var/lib/apt/lists/*
