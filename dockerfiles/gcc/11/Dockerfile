@@ -6,5 +6,5 @@ RUN apt-get install -y gcc-11 g++-11
 RUN rm -rf /var/lib/apt/lists/*
 
 # symlinks
-RUN ln -s /usr/bin/aarch64-linux-gnu-gcc-11 /usr/bin/gcc
-RUN ln -s /usr/bin/aarch64-linux-gnu-g++-11 /usr/bin/g++
+RUN if test -e /usr/bin/aarch64-linux-gnu-gcc-11; then ln -s /usr/bin/aarch64-linux-gnu-gcc-11 /usr/bin/gcc; fi
+RUN if test -e /usr/bin/aarch64-linux-gnu-g++-11; then ln -s /usr/bin/aarch64-linux-gnu-g++-11 /usr/bin/g++; fi
