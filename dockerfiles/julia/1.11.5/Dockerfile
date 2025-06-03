@@ -28,6 +28,6 @@ RUN if [ $TARGETARCH = "arm64" ]; then \
 fi
 
 # for debugging system call filtering
-RUN apt-get install strace
+RUN apt-get install -y strace
 
 RUN rm -rf /var/lib/apt/lists/*
