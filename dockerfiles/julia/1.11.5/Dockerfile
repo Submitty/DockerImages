@@ -15,8 +15,8 @@ ARG TARGETARCH
 # x86 
 RUN if [ $TARGETARCH = "amd64" ]; then \
   wget https://julialang-s3.julialang.org/bin/linux/x64/1.11/julia-1.11.5-linux-x86_64.tar.gz ; \
-  tar zxvf julia-1.11.1-linux-x86_64.tar.gz ; \
-  ln -s /julia-1.11.1/bin/julia /usr/bin/julia ; \
+  tar zxvf julia-1.11.5-linux-x86_64.tar.gz ; \
+  ln -s /julia-1.11.5/bin/julia /usr/bin/julia ; \
 fi
 
 
