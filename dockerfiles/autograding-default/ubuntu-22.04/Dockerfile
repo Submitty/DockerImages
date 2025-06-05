@@ -78,6 +78,8 @@ RUN chmod -R 755 ${SUBMITTY_INSTALL_DIR}/bin/comment_count.py
 
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
+# for debugging system call filtering
+RUN apt-get install -y strace
 
 RUN apt-get purge -y --auto-remove wget
 RUN rm -rf /var/lib/apt/lists/*
