@@ -1,8 +1,11 @@
 FROM ubuntu:22.04
 
-# installing requirements to get and extract prebuilt binaries
 RUN apt-get update
 RUN apt-get install -y gcc-11 g++-11
+
+# for debugging system call filtering
+RUN apt-get install -y strace
+
 RUN rm -rf /var/lib/apt/lists/*
 
 # symlinks - x86
