@@ -6,6 +6,8 @@
 
 FROM ubuntu:22.04
 
+ARG TARGETARCH
+
 RUN apt-get update
 RUN apt-get install -y python3
 RUN apt-get install -y libpython3.10
@@ -26,6 +28,9 @@ RUN apt-get install -y p7zip-full
 RUN apt-get install -y patchutils 
 RUN apt-get install -y libpq-dev
 RUN apt-get install -y unzip zip
+
+RUN if [ $TARGETARCH = "amd64" ]; then apt-get install -y valgrind; fi
+
 #RUN apt-get install -y valgrind
 RUN apt-get install -y libmagic-ocaml-dev 
 RUN apt-get install -y javascript-common  
