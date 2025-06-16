@@ -14,12 +14,13 @@ RUN apt-get install -y libpython3.10
 RUN apt-get install -y python3-dev
 RUN apt-get install -y clang lld lldb
 RUN apt-get install -y gcc g++ 
-#RUN apt-get install -y gdb
+
+RUN if [ $TARGETARCH = "amd64" ]; then apt-get install -y gdb; fi
 
 RUN apt-get install -y autoconf automake autotools-dev
 RUN apt-get install -y diffstat
 RUN apt-get install -y finger sed
-RUN apt-get -y install locales
+RUN apt-get install -y locales
 
 RUN apt-get install -y git
 RUN apt-get install -y git-man 
@@ -31,17 +32,20 @@ RUN apt-get install -y unzip zip
 
 RUN if [ $TARGETARCH = "amd64" ]; then apt-get install -y valgrind; fi
 
-#RUN apt-get install -y valgrind
 RUN apt-get install -y libmagic-ocaml-dev 
 RUN apt-get install -y javascript-common  
 RUN apt-get install -y libfile-mmagic-perl libgnupg-interface-perl libbsd-resource-perl libarchive-zip-perl 
 RUN apt-get install -y jq libseccomp-dev libseccomp2 seccomp
-#RUN apt-get install -y junit
+
+RUN if [ $TARGETARCH = "amd64" ]; then apt-get install -y junit; fi
+
 RUN apt-get install -y flex
 RUN apt-get install -y bison
 RUN apt-get install -y spim
 RUN apt-get install -y poppler-utils
-#RUN apt-get install -y imagemagick
+
+RUN if [ $TARGETARCH = "amd64" ]; then apt-get install -y imagemagick; fi
+
 RUN apt-get install -y cloc
 
 ENV LANG C.UTF-8
