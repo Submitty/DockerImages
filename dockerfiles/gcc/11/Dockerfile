@@ -15,3 +15,5 @@ RUN if test -e /usr/bin/x86_64-linux-gnu-g++-11; then ln -s /usr/bin/x86_64-linu
 # symlinks - ARM
 RUN if test -e /usr/bin/aarch64-linux-gnu-gcc-11; then ln -s /usr/bin/aarch64-linux-gnu-gcc-11 /usr/bin/gcc; fi
 RUN if test -e /usr/bin/aarch64-linux-gnu-g++-11; then ln -s /usr/bin/aarch64-linux-gnu-g++-11 /usr/bin/g++; fi
+
+# force-rebuild
