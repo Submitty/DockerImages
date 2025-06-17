@@ -12,3 +12,5 @@ RUN rm -rf /var/lib/apt/lists/*
 # symlinks
 RUN ln -s /usr/bin/clang++-14 /usr/bin/clang++
 RUN ln -s /usr/bin/clang-14 /usr/bin/clang
+
+# force-rebuild
