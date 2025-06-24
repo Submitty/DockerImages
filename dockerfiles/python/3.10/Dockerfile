@@ -11,5 +11,3 @@ RUN rm -rf /var/lib/apt/lists/*
 
 # symlinks
 RUN ln -s /usr/bin/python3.10 /usr/bin/python3
-
-# force-rebuild
