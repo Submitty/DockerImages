@@ -9,9 +9,9 @@ RUN apt-get update && \
 
 # Install common data science and clustering libraries, more such can be added as per needs later on
 RUN pip3 install --no-cache-dir \
-    numpy \
-    pandas \
-    scikit-learn \
-    scipy 
+    numpy==2.2.6 \
+    pandas==2.3.3 \
+    scikit-learn==1.7.2 \
+    scipy==1.15.3 
 
 RUN ln -s /usr/bin/python3 /usr/bin/python
